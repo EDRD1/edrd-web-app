@@ -1,8 +1,7 @@
 import './App.css';
 import {Canvas} from "@react-three/fiber";
-import {OrbitControls} from "@react-three/drei";
 import styled from 'styled-components';
-import { Suspense,useState,useRef } from 'react';
+import { Suspense,useState } from 'react';
 import {CubeTransparent} from "./components/CubeTransparent";
 
 
