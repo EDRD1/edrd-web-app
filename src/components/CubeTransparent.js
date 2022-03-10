@@ -8,7 +8,7 @@ export  function CubeTransparent({animation}) {
   const myGroup = useRef()
   const myMesh = useRef()
   //const previousAnimation=usePrevious(animation)
-  const { nodes, materials,scene } = useGLTF('/cubeTransparent.gltf')
+  const { nodes, materials } = useGLTF('/cubeTransparent.gltf')
   useEffect(() => {
     switch (animation) {
       case "StandBy":
@@ -98,11 +98,4 @@ export  function CubeTransparent({animation}) {
   )
 }
 
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  }, [value]); 
-  return ref.current;
-}
 
