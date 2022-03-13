@@ -1,101 +1,146 @@
-import React, { useRef,useEffect } from 'react'
-import { useGLTF } from '@react-three/drei'
-import gsap from "gsap"
+import React, { useRef,useEffect } from "react";
+import { useGLTF } from "@react-three/drei";
+import gsap from "gsap";
+import { ANIMATION_DIRECTIONS, CUBE_FACES, ROTATION_ORDERS, OPERATORS } from "../utils/enums";
+import * as THREE from "three";
+import {positions} from "../utils/facesPositions";
+import {getAngleToMove,getDuration} from "../utils/utils";
 
-useGLTF.preload('/cubeTransparent.gltf')
 
-export  function CubeTransparent({animation}) {
-  const myGroup = useRef()
-  const myMesh = useRef()
-  //const previousAnimation=usePrevious(animation)
-  const { nodes, materials } = useGLTF('/cubeTransparent.gltf')
+useGLTF.preload('/cubeTransparent2.gltf');
+
+export  function CubeTransparent(props) {
+  const myGroup = useRef();
+  const { nodes, materials, scene } = useGLTF('/cubeTransparent2.gltf');
+  scene.background= new THREE.Color(0x282c34);
+  //Render animation
   useEffect(() => {
-    switch (animation) {
-      case "StandBy":
+
+    let angleToMove, plusMinus, complete, converted;
+
+    //Rotate x axis based on parameters
+    function rotateXAxis(sign,amount,duration,delay_,finish, noConvertion){
+      complete= finish ? props.onAnimationDone : null;
+      converted= noConvertion ? amount : amount * (Math.PI/180); 
+      myGroup.current.rotation.order=ROTATION_ORDERS.X;
+        gsap.to(myGroup.current.rotation,{
+          x: sign + converted,
+          duration: duration,
+          delay: delay_,
+          onComplete: complete
+        });
+    };
+
+    //Rotate y axis based on parameters
+    function rotateYAxis(sign,amount,duration,delay_,finish, noConvertion){
+      complete= finish ? props.onAnimationDone : null;
+      converted= noConvertion ? amount : amount * (Math.PI/180); 
+      myGroup.current.rotation.order=ROTATION_ORDERS.Y;
+        gsap.to(myGroup.current.rotation,{
+          y: sign + converted,
+          duration: duration,
+          delay: delay_,
+          onComplete: complete
+        });
+    };
+
+    //Rotate z axis based on parameters
+    function rotateZAxis(sign,amount,duration,delay_,finish, noConvertion){
+      complete= finish ? props.onAnimationDone : null;
+      converted= noConvertion ? amount : amount * (Math.PI/180); 
+      myGroup.current.rotation.order=ROTATION_ORDERS.Z;
+        gsap.to(myGroup.current.rotation,{
+          z: sign + converted,
+          duration: duration,
+          delay: delay_,
+          onComplete: complete
+        });
+    };
+
+    //Rotate x,y,z axis to show wanted face
+    function showFace(face){
+      let angleSign, delay_=0,  duration_;
+      angleSign= getAngleToMove(myGroup.current.rotation.x, positions[face].x);
+      angleToMove=angleSign.angle;
+      plusMinus= angleSign.plusMinus;
+      duration_=getDuration(angleToMove);
+      rotateXAxis(plusMinus, angleToMove, duration_, delay_, false,  true);
+      delay_+= duration_ + 0.1;
+      angleSign= getAngleToMove(myGroup.current.rotation.y, positions[face].y);
+      angleToMove= angleSign.angle;
+      plusMinus= angleSign.plusMinus;
+      duration_=getDuration(angleToMove);
+      rotateYAxis(plusMinus, angleToMove, duration_, delay_, false, true);
+      delay_+= duration_ + 0.1;
+      angleSign= getAngleToMove(myGroup.current.rotation.z, positions[face].z);
+      angleToMove= angleSign.angle;
+      plusMinus= angleSign.plusMinus;
+      duration_=getDuration(angleToMove);
+      rotateZAxis(plusMinus, angleToMove, duration_, delay_, true, true);
+    }
+
+    switch (props.animation) {
+      //Stand by animation
+      case ANIMATION_DIRECTIONS.STANDBY:
         break;
       //Animate cube to show next face on top
-      case "Up":
-        myGroup.current.rotation.order="XYZ"
-        gsap.to(myGroup.current.rotation,{
-          x:"-="+20*(Math.PI/180),
-          duration:0.3,
-        })
-        gsap.to(myGroup.current.rotation,{
-          x:"+="+120*(Math.PI/180),
-          duration:0.3,
-          delay:0.4
-        })
-        gsap.to(myGroup.current.rotation,{
-          x:"-="+10*(Math.PI/180),
-          duration:0.2,
-          delay:0.8
-        });
+      case ANIMATION_DIRECTIONS.UP:
+        rotateXAxis(OPERATORS.MINUS_EQ, 20, 0.3, 0, false, false);
+        rotateXAxis(OPERATORS.PLUS_EQ, 120, 0.3, 0.4, false, false);
+        rotateXAxis(OPERATORS.MINUS_EQ, 10, 0.2, 0.8, true, false);
         break;
-      //Animate cube to show next face on down
-      case "Down":
-        myGroup.current.rotation.order="XYZ"
-        gsap.to(myGroup.current.rotation,{
-          x:"+="+20*(Math.PI/180),
-          duration:0.3,
-        })
-        gsap.to(myGroup.current.rotation,{
-          x:"-="+120*(Math.PI/180),
-          duration:0.3,
-          delay:0.4
-        })
-        gsap.to(myGroup.current.rotation,{
-          x:"+="+10*(Math.PI/180),
-          duration:0.2,
-          delay:0.8
-        });
+      //Animate cube to show next face down
+      case ANIMATION_DIRECTIONS.DOWN:
+        rotateXAxis(OPERATORS.PLUS_EQ, 20, 0.3, 0, false, false);
+        rotateXAxis(OPERATORS.MINUS_EQ, 120, 0.3, 0.4, false, false);
+        rotateXAxis(OPERATORS.PLUS_EQ, 10, 0.2, 0.8, true, false);
         break;
       //Animate cube to show next face to the right
-      case "Right":
-        myGroup.current.rotation.order="YXZ"
-        gsap.to(myGroup.current.rotation,{
-          y:"-="+20*(Math.PI/180),
-          duration:0.3,
-        })
-        gsap.to(myGroup.current.rotation,{
-          y:"+="+120*(Math.PI/180),
-          duration:0.3,
-          delay:0.4
-        })
-        gsap.to(myGroup.current.rotation,{
-          y:"-="+10*(Math.PI/180),
-          duration:0.2,
-          delay:0.8
-        });
+      case ANIMATION_DIRECTIONS.RIGHT:
+        rotateYAxis(OPERATORS.PLUS_EQ, 20, 0.3, 0, false, false);
+        rotateYAxis(OPERATORS.MINUS_EQ, 120, 0.3, 0.4, false, false);
+        rotateYAxis(OPERATORS.PLUS_EQ, 10, 0.2, 0.8, true, false);
         break;
       //Animate cube to show next face to the left
-      case "Left":
-        myGroup.current.rotation.order="YXZ"
-        gsap.to(myGroup.current.rotation,{
-          y:"+="+20*(Math.PI/180),
-          duration:0.3,
-        })
-        gsap.to(myGroup.current.rotation,{
-          y:"-="+120*(Math.PI/180),
-          duration:0.3,
-          delay:0.4
-        })
-        gsap.to(myGroup.current.rotation,{
-          y:"+="+10*(Math.PI/180),
-          duration:0.2,
-          delay:0.8
-        });
+      case ANIMATION_DIRECTIONS.LEFT:
+        rotateYAxis(OPERATORS.MINUS_EQ, 20, 0.3, 0, false, false);
+        rotateYAxis(OPERATORS.PLUS_EQ, 120, 0.3, 0.4, false, false);
+        rotateYAxis(OPERATORS.MINUS_EQ, 10, 0.2, 0.8, true, false);
         break;
-    
-      default:
+      //Animate to show INFO face
+      case CUBE_FACES.INFO:
+        showFace(CUBE_FACES.INFO);
+        break;
+      //Animate to show EDUCATION face
+      case CUBE_FACES.EDUCATION:
+        showFace(CUBE_FACES.EDUCATION);
+        break;
+      //Animate to show SKILLS face
+      case CUBE_FACES.SKILLS:
+        showFace(CUBE_FACES.SKILLS);
+        break;
+      //Animate to show LANGUAGES face
+      case CUBE_FACES.LANGUAGES:
+        showFace(CUBE_FACES.LANGUAGES);
+        break;
+      //Animate to show EXPERIENCE face
+      case CUBE_FACES.EXPERIENCE:
+        showFace(CUBE_FACES.EXPERIENCE);
+        break;
+      //Animate to show INTERESTS face
+      case CUBE_FACES.INTERESTS:
+        showFace(CUBE_FACES.INTERESTS);
+        break;
+    default:
         break;
     }
-  }, [animation])
+  }, [props.animation,props.onAnimationDone,props]);
   
   return (
-    <group ref={myGroup} {...animation} scale={[0.5,0.5,0.5]} dispose={null}>
-      <mesh ref={myMesh} geometry={nodes.Cube.geometry} material={materials.transparent} />
+    <group ref={myGroup} scale={[0.6,0.6,0.6]} dispose={null}>
+      <mesh geometry={nodes.Cube.geometry} material={materials.transparent} />
     </group>
   )
-}
+};
 
 
