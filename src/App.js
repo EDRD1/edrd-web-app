@@ -1,15 +1,19 @@
 import './App.css';
 import {Canvas} from "@react-three/fiber";
 import styled from 'styled-components';
-import { Suspense,useState} from 'react';
+import { Suspense,useState,useRef} from 'react';
 import {CubeTransparent} from "./components/CubeTransparent";
-import { ANIMATION_DIRECTIONS, CUBE_FACES } from './utils/enums';
+import { ANIMATION_DIRECTIONS, CUBE_FACES, INITIAL_CAMERA_ANGLES} from './utils/enums';
+import {OrbitControls} from '@react-three/drei'
 
 
 
 function App() {
   const [animation, setAnimation] =useState("StandBy");
   const [btnDisabled,setBtnDisabled]=useState(false);
+  const orbitControls= useRef();
+  const initialPolarAngle= INITIAL_CAMERA_ANGLES.POLAR;
+  const initialAzimuthalAngle= INITIAL_CAMERA_ANGLES.AZIMUTHAL;
   return (
     <Wrapper className="App">
       <header className="App-header">
@@ -44,11 +48,30 @@ function App() {
         {CUBE_FACES.INTERESTS}
         </button>
       </header>
-        <Canvas className="canvas" >
+        <Canvas className="canvas">
           <Suspense fallback={null}>
             <directionalLight position={[10,2,1]} intensity={0.05} color={0x3b79ff}/>
             <directionalLight position={[-10,-1,-1]} intensity={0.05} color={0x3b79ff}/>
-            <CubeTransparent animation={animation} onAnimationDone={()=>{setAnimation(ANIMATION_DIRECTIONS.STANDBY);setBtnDisabled(false)}}/>
+            <OrbitControls ref={orbitControls} />
+            <CubeTransparent animation={animation} 
+              onAnimationDone={()=>{
+                console.log( orbitControls.current);
+                //Returns camera to original state if altered by orbit controls
+                if (Object.values(CUBE_FACES).includes(animation)){
+                  if (orbitControls.current.getPolarAngle() !== initialPolarAngle){
+                    orbitControls.current.setPolarAngle(initialPolarAngle);
+                  }
+  
+                  if ( orbitControls.current.getAzimuthalAngle() !== initialAzimuthalAngle){
+                    orbitControls.current.setAzimuthalAngle(initialAzimuthalAngle);
+                  }
+                }   
+                
+                //Reset animation state and buttons disabled state
+                setAnimation(ANIMATION_DIRECTIONS.STANDBY);
+                setBtnDisabled(false);
+              }}
+            />
           </Suspense>
         </Canvas>   
     </Wrapper> 
