@@ -25,3 +25,8 @@ export const OPERATORS={
     PLUS_EQ:"+=",
     MINUS_EQ:"-="
 };
+
+export const INITIAL_CAMERA_ANGLES={
+    POLAR:1.5707963267948966,
+    AZIMUTHAL:0
+}

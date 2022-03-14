@@ -6,12 +6,12 @@ import * as THREE from "three";
 import {positions} from "../utils/facesPositions";
 import {getAngleToMove,getDuration} from "../utils/utils";
 
-
-useGLTF.preload('/cubeTransparent2.gltf');
+const gltfName="/cubeTransparent2_d.gltf" ;
+useGLTF.preload(gltfName);
 
 export  function CubeTransparent(props) {
   const myGroup = useRef();
-  const { nodes, materials, scene } = useGLTF('/cubeTransparent2.gltf');
+  const { nodes, materials, scene } = useGLTF(gltfName);
   scene.background= new THREE.Color(0x282c34);
   //Render animation
   useEffect(() => {
@@ -20,7 +20,7 @@ export  function CubeTransparent(props) {
 
     //Rotate x axis based on parameters
     function rotateXAxis(sign,amount,duration,delay_,finish, noConvertion){
-      complete= finish ? props.onAnimationDone : null;
+      complete= finish ? props.onAnimationDone: null;
       converted= noConvertion ? amount : amount * (Math.PI/180); 
       myGroup.current.rotation.order=ROTATION_ORDERS.X;
         gsap.to(myGroup.current.rotation,{
@@ -33,7 +33,7 @@ export  function CubeTransparent(props) {
 
     //Rotate y axis based on parameters
     function rotateYAxis(sign,amount,duration,delay_,finish, noConvertion){
-      complete= finish ? props.onAnimationDone : null;
+      complete= finish ? props.onAnimationDone: null;
       converted= noConvertion ? amount : amount * (Math.PI/180); 
       myGroup.current.rotation.order=ROTATION_ORDERS.Y;
         gsap.to(myGroup.current.rotation,{
@@ -61,7 +61,7 @@ export  function CubeTransparent(props) {
     function showFace(face){
       let angleSign, delay_=0,  duration_;
       angleSign= getAngleToMove(myGroup.current.rotation.x, positions[face].x);
-      angleToMove=angleSign.angle;
+      angleToMove= angleSign.angle;
       plusMinus= angleSign.plusMinus;
       duration_=getDuration(angleToMove);
       rotateXAxis(plusMinus, angleToMove, duration_, delay_, false,  true);
@@ -69,13 +69,13 @@ export  function CubeTransparent(props) {
       angleSign= getAngleToMove(myGroup.current.rotation.y, positions[face].y);
       angleToMove= angleSign.angle;
       plusMinus= angleSign.plusMinus;
-      duration_=getDuration(angleToMove);
+      duration_= getDuration(angleToMove);
       rotateYAxis(plusMinus, angleToMove, duration_, delay_, false, true);
       delay_+= duration_ + 0.1;
       angleSign= getAngleToMove(myGroup.current.rotation.z, positions[face].z);
       angleToMove= angleSign.angle;
       plusMinus= angleSign.plusMinus;
-      duration_=getDuration(angleToMove);
+      duration_= getDuration(angleToMove);
       rotateZAxis(plusMinus, angleToMove, duration_, delay_, true, true);
     }
 
