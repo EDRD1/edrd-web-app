@@ -4,13 +4,14 @@ export const ANIMATION_DIRECTIONS={
     LEFT: "Left",
     RIGHT: "Right",
     STANDBY: "StandBy",
+    START: "Start"
 };
 
 export const CUBE_FACES={
     INFO:"f1",
     EDUCATION:"f2",
     SKILLS:"f5",
-    LANGUAGES:"f6",
+    TECHNOLOGIES:"f6",
     EXPERIENCE:"f4",
     INTERESTS:"f3"
 };

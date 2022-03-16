@@ -3,9 +3,9 @@ import { OPERATORS } from "./enums";
 //Get += or -= based on number
 export function getPlusMinus (num){
     if( num >= 0){
-      return OPERATORS.PLUS_EQ;
-    }else {
-      return OPERATORS.MINUS_EQ;
+        return OPERATORS.PLUS_EQ;
+    } else {
+        return OPERATORS.MINUS_EQ;
     }
   };
 
@@ -20,12 +20,12 @@ export function getAngleToMove (currentAngle,wantedAngle){
 //Get duration of animation based on angle
 export function getDuration(angle){
     const factor=0.18;
-    if( angle > 100){
+    if ( angle > 100){
         return angle * (factor/100)
-    }else{
-        if( angle > 10){
+    } else {
+        if ( angle > 10){
             return angle * (factor/10)
-        }else{
+        } else {
             return angle * factor;  
         }
     }  
