@@ -1,10 +1,10 @@
 .App {
   text-align: center;
-  background-color: #282c34;
+  background-color: #000000;
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #000000;
   min-height: 6vh;
  
   align-items: center;
@@ -19,7 +19,7 @@
 
 .App-footer {
   min-height: 8vh;
-  background-color: #282c34; 
+  background-color: #000000; 
   color: white;
   
 }
@@ -27,4 +27,17 @@
 .btnDirection{
   height: 50px;
   width: 50px;
+}
+
+.canvasContainer{
+  width:58%;
+  float: right;
+}
+
+/* Hide scrollbar */
+*{
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
 }

@@ -15,9 +15,7 @@ export  function CubeTransparent(props) {
   scene.background= new THREE.Color(0x282c34);
   //Render animation
   useEffect(() => {
-
     let angleToMove, plusMinus, complete, converted;
-
     //Rotate x axis based on parameters
     function rotateXAxis(sign,amount,duration,delay_,finish, noConvertion){
       complete= finish ? props.onAnimationDone: null;
@@ -80,6 +78,17 @@ export  function CubeTransparent(props) {
     }
 
     switch (props.animation) {
+      case ANIMATION_DIRECTIONS.START:
+      //Animate object to appear from  top
+        if (myGroup.current.position.y !== 0){
+          gsap.to(myGroup.current.position,{
+            y: OPERATORS.MINUS_EQ + 7,
+            duration: 0.6,
+            ease: "power3.out",
+            delay: 0
+          }); 
+        }
+        break;
       //Stand by animation
       case ANIMATION_DIRECTIONS.STANDBY:
         break;
@@ -119,9 +128,9 @@ export  function CubeTransparent(props) {
       case CUBE_FACES.SKILLS:
         showFace(CUBE_FACES.SKILLS);
         break;
-      //Animate to show LANGUAGES face
-      case CUBE_FACES.LANGUAGES:
-        showFace(CUBE_FACES.LANGUAGES);
+      //Animate to show TECHNOLOGIES face
+      case CUBE_FACES.TECHNOLOGIES:
+        showFace(CUBE_FACES.TECHNOLOGIES);
         break;
       //Animate to show EXPERIENCE face
       case CUBE_FACES.EXPERIENCE:
@@ -137,7 +146,7 @@ export  function CubeTransparent(props) {
   }, [props.animation,props.onAnimationDone,props]);
   
   return (
-    <group ref={myGroup} scale={[0.6,0.6,0.6]} dispose={null}>
+    <group ref={myGroup} scale={[2,2,2]} position={[0,7,0]} dispose={null}>
       <mesh geometry={nodes.Cube.geometry} material={materials.transparent} />
     </group>
   )
