@@ -29,5 +29,8 @@ export const OPERATORS={
 
 export const INITIAL_CAMERA_ANGLES={
     POLAR:1.5707963267948966,
-    AZIMUTHAL:0
+    AZIMUTHAL:0,
+    X:-6.123233995736766e-17,
+    Y:0,
+    Z:0
 }
