@@ -3,6 +3,7 @@ import { useGLTF } from "@react-three/drei";
 import gsap from "gsap";
 import { ANIMATION_DIRECTIONS, CUBE_FACES, ROTATION_ORDERS, OPERATORS } from "../utils/enums";
 import * as THREE from "three";
+import { useThree } from "@react-three/fiber";
 import {positions} from "../utils/facesPositions";
 import {getAngleToMove,getDuration} from "../utils/utils";
 
@@ -10,9 +11,46 @@ const gltfName="/cubeTransparent2_d.gltf" ;
 useGLTF.preload(gltfName);
 
 export  function CubeTransparent(props) {
+  
   const myGroup = useRef();
   const { nodes, materials, scene } = useGLTF(gltfName);
   scene.background= new THREE.Color(0x282c34);
+  const{camera} =useThree();
+  //Initial camera settings
+  const aspectRatio=16/9;
+  const fov = 50;
+  //Add rezise event listener to window
+  window.addEventListener('resize', handleResize);
+  function handleResize(){
+    //limit when rezise is executed
+    if (window.innerWidth > 849){
+      return;
+    }
+    const newAspect = window.innerWidth / window.innerHeight;
+    if (newAspect < aspectRatio) {
+      //When window is too narrow
+      camera.aspect= newAspect;
+      const cameraHeight = Math.tan(THREE.MathUtils.degToRad(fov / 2));
+      const ratio = camera.aspect / aspectRatio;
+      const newCameraHeight = cameraHeight / ratio;
+      let newFov= THREE.MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
+      camera.fov =newFov;
+       
+    } else {
+      //When window fits camera
+      camera.aspect=aspectRatio;
+      camera.fov=fov;
+    }
+   camera.updateProjectionMatrix();
+  };
+
+  useEffect(() => {
+    handleResize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps  
+  },[]);
+  
+  
+
   //Render animation
   useEffect(() => {
     let angleToMove, plusMinus, complete, converted;
@@ -89,7 +127,7 @@ export  function CubeTransparent(props) {
           }); 
         }
         break;
-      //Stand by animation
+      //Stand by
       case ANIMATION_DIRECTIONS.STANDBY:
         break;
       //Animate cube to show next face on top
@@ -143,10 +181,11 @@ export  function CubeTransparent(props) {
     default:
         break;
     }
+
   }, [props.animation,props.onAnimationDone,props]);
   
   return (
-    <group ref={myGroup} scale={[2,2,2]} position={[0,7,0]} dispose={null}>
+    <group ref={myGroup} scale={[2,2,2]} position={[0,7,0]} dispose={null} >
       <mesh geometry={nodes.Cube.geometry} material={materials.transparent} />
     </group>
   )
