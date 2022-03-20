@@ -4,8 +4,8 @@ import gsap from "gsap";
 import { ANIMATION_DIRECTIONS, CUBE_FACES, ROTATION_ORDERS, OPERATORS } from "../utils/enums";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
-import {positions} from "../utils/facesPositions";
-import {getAngleToMove,getDuration} from "../utils/utils";
+import {positions, face_indexes} from "../utils/facesPositions";
+import {getAngleToMove,getDuration,isInsideArea} from "../utils/utils";
 
 const gltfName="/cubeTransparent2_d.gltf" ;
 useGLTF.preload(gltfName);
@@ -13,12 +13,55 @@ useGLTF.preload(gltfName);
 export  function CubeTransparent(props) {
   
   const myGroup = useRef();
+  const myMesh = useRef();
   const { nodes, materials, scene } = useGLTF(gltfName);
   scene.background= new THREE.Color(0x282c34);
-  const{camera} =useThree();
+  //Get camera object and intersetct from cursor
+  const{camera,raycaster} =useThree();
   //Initial camera settings
   const aspectRatio=16/9;
   const fov = 50;
+  //Hande mouseMove for extra features
+  function handleMouseMove(e){
+    //Get raycaster intersection with cube
+    const intersects= raycaster.intersectObject(myMesh.current,false);
+    //Get face of intersection
+    let resultObject;
+    switch (intersects[0].faceIndex) {
+      case face_indexes[CUBE_FACES.INFO].lower: 
+      case face_indexes[CUBE_FACES.INFO].upper:
+        resultObject= isInsideArea(CUBE_FACES.INFO, intersects[0].point.x, intersects[0].point.y);
+        if(resultObject.inArea){
+          console.log("En " + resultObject.area);
+        }else{
+          console.log("no");
+        }
+        break;
+      case face_indexes[CUBE_FACES.EDUCATION].lower:
+      case face_indexes[CUBE_FACES.EDUCATION].upper:
+        console.log("edu");
+        break;
+      case face_indexes[CUBE_FACES.SKILLS].lower:
+      case face_indexes[CUBE_FACES.SKILLS].upper:
+        console.log("skills");
+        break;
+      case face_indexes[CUBE_FACES.TECHNOLOGIES].lower:
+      case face_indexes[CUBE_FACES.TECHNOLOGIES].upper:
+        console.log("tech");
+        break;
+      case face_indexes[CUBE_FACES.EXPERIENCE].lower: 
+      case face_indexes[CUBE_FACES.EXPERIENCE].upper:
+        console.log("xp");
+        break;
+      case face_indexes[CUBE_FACES.INTERESTS].lower: 
+      case face_indexes[CUBE_FACES.INTERESTS].upper:
+        console.log("inter");
+        break;
+      default:
+        break;
+    }
+    //console.log(intersects[0].point)
+  };
   //Add rezise event listener to window
   window.addEventListener('resize', handleResize);
   function handleResize(){
@@ -186,7 +229,7 @@ export  function CubeTransparent(props) {
   
   return (
     <group ref={myGroup} scale={[2,2,2]} position={[0,7,0]} dispose={null} >
-      <mesh geometry={nodes.Cube.geometry} material={materials.transparent} />
+      <mesh ref={myMesh} geometry={nodes.Cube.geometry} material={materials.transparent} onPointerMove={(e)=>{handleMouseMove(e)}}/>
     </group>
   )
 };

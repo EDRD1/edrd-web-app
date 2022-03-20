@@ -19,36 +19,38 @@ function App() {
       </header>
       <div className="contentContainer">
         <div className="buttonsContainer">
-          <button  className="btnDirection" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.UP); setBtnDisabled(true)}} disabled={btnDisabled}>
-            🔺
+          <div className="facesTextContainer">
+            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INFO); setBtnDisabled(true)}} disabled={btnDisabled}>
+              {CUBE_FACES.INFO}
+              </button>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EDUCATION); setBtnDisabled(true)}} disabled={btnDisabled}>
+              {CUBE_FACES.EDUCATION}
+              </button>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.SKILLS); setBtnDisabled(true)}} disabled={btnDisabled}>
+              {CUBE_FACES.SKILLS}
+              </button>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.TECHNOLOGIES); setBtnDisabled(true)}} disabled={btnDisabled}>
+              {CUBE_FACES.TECHNOLOGIES}
+              </button>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EXPERIENCE); setBtnDisabled(true)}} disabled={btnDisabled}>
+              {CUBE_FACES.EXPERIENCE}
+              </button>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INTERESTS); setBtnDisabled(true)}} disabled={btnDisabled}>
+              {CUBE_FACES.INTERESTS}
+            </button>   
+          </div>
+         { /* <button  className="btnDirection" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.UP); setBtnDisabled(true)}} disabled={btnDisabled}>
+            {ANIMATION_DIRECTIONS.UP}
             </button>
             <button  className="btnDirection" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.DOWN); setBtnDisabled(true)}} disabled={btnDisabled}>
-            🔻
+            {ANIMATION_DIRECTIONS.DOWN}
             </button>
             <button  className="btnDirection" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.LEFT); setBtnDisabled(true)}} disabled={btnDisabled} >
-            ◄
+            {ANIMATION_DIRECTIONS.LEFT}
             </button>
             <button  className="btnDirection" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.RIGHT); setBtnDisabled(true)}} disabled={btnDisabled}>
-            ►
-            </button>
-            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INFO); setBtnDisabled(true)}} disabled={btnDisabled}>
-            {CUBE_FACES.INFO}
-            </button>
-            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EDUCATION); setBtnDisabled(true)}} disabled={btnDisabled}>
-            {CUBE_FACES.EDUCATION}
-            </button>
-            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.SKILLS); setBtnDisabled(true)}} disabled={btnDisabled}>
-            {CUBE_FACES.SKILLS}
-            </button>
-            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.TECHNOLOGIES); setBtnDisabled(true)}} disabled={btnDisabled}>
-            {CUBE_FACES.TECHNOLOGIES}
-            </button>
-            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EXPERIENCE); setBtnDisabled(true)}} disabled={btnDisabled}>
-            {CUBE_FACES.EXPERIENCE}
-            </button>
-            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INTERESTS); setBtnDisabled(true)}} disabled={btnDisabled}>
-            {CUBE_FACES.INTERESTS}
-          </button>       
+            {ANIMATION_DIRECTIONS.RIGHT}
+            </button> */}    
         </div>
         <div className="canvasContainer">
           <Canvas className="canvas" >
@@ -84,9 +86,14 @@ function App() {
 
 const Wrapper=styled.div`
 canvas{
-  height:100vh;
-  width=100vw;
+  height: 90vh;
   background-color: transparent;
+  margin-left:10vw;
+}
+@media only screen and (max-width:850px){
+  canvas{
+    margin-left:0;
+  }
 }
 `
 ;
