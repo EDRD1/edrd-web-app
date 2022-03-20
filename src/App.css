@@ -5,15 +5,10 @@
 
 .App-header {
   background-color: transparent;
- 
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
 }
 
 .App-footer {
@@ -24,33 +19,68 @@
 }
 
 .btnDirection{
-  height: 50px;
-  width: 50px;
+  position: relative;
+  display: block;
+  background: none!important;
+  border: none;
+  padding: 0 0 0 0 !important;
+  margin-top: 3vh;
+  margin-left: 7vw;
+  font-family: Orbitron, serif;
+  font-size: 3vw;
+  /*color: #39ff14;*/
+  color:#34d617;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btnDirection:before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #39ff14;
+  transform: scaleX(0);
+  transform-origin: top left;
+  transition: transform 0.3s ease;
+}
+.btnDirection:hover:before {
+  transform: scaleX(1);
+}
+.btnDirection:hover{
+  color: #26fc00;
+  text-shadow:0 0 3px #1f7e0e;
+
 }
 
-.contentContainer{
-  
-}
+
 .buttonsContainer{
+  position: relative;
   display: inline-block;
   width: 30vw;
   height: 100vh;
+  vertical-align: 23vh;
 }
 .canvasContainer{
   display: inline-block;
   width: 70vw;
   height: 100vh;
-
 }
 
  @media only screen and (max-width:850px){
-  .contentContainer{
-   
+  .btnDirection{
+    display: inline;
+    padding: 0 !important;
+    font-size: 6vw;
+    margin-top: 3vh;
+    margin-left: 3vw;
+    /* margin: 0.5rem; */
   }
   .buttonsContainer{
     display: inline;
     width: 100vw;
-    height: 10vh;
   } 
   .canvasContainer{
     display: inline;
