@@ -1,4 +1,5 @@
-import { OPERATORS } from "./enums";
+import { OPERATORS,CUBE_FACES } from "./enums";
+import { face_areas } from "./facesPositions";
 
 //Get += or -= based on number
 export function getPlusMinus (num){
@@ -29,4 +30,47 @@ export function getDuration(angle){
             return angle * factor;  
         }
     }  
+};
+
+//Find if point inside certain area of a face
+export function isInsideArea(face, x ,y){
+    //Find if x and y of point given is inside areas coordinates
+    function pointInside(x1, y1, x2, y2, x, y)
+    {
+        if (x > x1 && x < x2 && y < y1 && y > y2){
+            return true;
+        }
+        return false;
+    }
+
+    let inArea_= false, area_=null;
+    switch (face) {
+        case CUBE_FACES.INFO:
+            for (let areaObj in face_areas[face]) {
+                if(pointInside(face_areas[face][areaObj].upperLeft.x, face_areas[face][areaObj].upperLeft.y, face_areas[face][areaObj].lowerRight.x, face_areas[face][areaObj].lowerRight.y, x, y)){
+                    inArea_= true;
+                    area_= areaObj;
+                }
+              }
+            break;
+        case CUBE_FACES.EDUCATION:
+            
+            break;
+        case CUBE_FACES.SKILLS:
+            
+            break;
+        case CUBE_FACES.TECHNOLOGIES:
+            
+            break;
+        case CUBE_FACES.EXPERIENCE:
+            
+            break;
+        case CUBE_FACES.INTERESTS:
+            
+            break;
+        default:
+            break;
+    }
+
+   return {inArea:inArea_,area:area_};
 };

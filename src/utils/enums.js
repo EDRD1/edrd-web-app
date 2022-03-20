@@ -8,12 +8,12 @@ export const ANIMATION_DIRECTIONS={
 };
 
 export const CUBE_FACES={
-    INFO:"f1",
-    EDUCATION:"f2",
-    SKILLS:"f5",
-    TECHNOLOGIES:"f6",
-    EXPERIENCE:"f4",
-    INTERESTS:"f3"
+    INFO:"Info",
+    EDUCATION:"Education",
+    SKILLS:"Skills",
+    TECHNOLOGIES:"Technologies",
+    EXPERIENCE:"Experience",
+    INTERESTS:"Interests"
 };
 
 export const ROTATION_ORDERS={
