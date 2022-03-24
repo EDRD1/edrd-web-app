@@ -27,10 +27,37 @@ export const OPERATORS={
     MINUS_EQ:"-="
 };
 
-export const INITIAL_CAMERA_ANGLES={
-    POLAR:1.5707963267948966,
-    AZIMUTHAL:0,
-    X:-6.123233995736766e-17,
-    Y:0,
-    Z:0
-}
+
+export const CUBE_AREAS={
+    NONE:"none",
+    NAME:"name",
+    BIRTH_DATE:"birth_date",
+    LOCATION:"location",
+    PHONE_NUMBER:"phone_number",
+    EMAIL:"email",
+    UNIVERSITY:"university",
+    DEGREE:"degree",
+    HIGHSCHOOL:"highschool",
+    DIPLOMA:"diploma",
+    FINANCE:"finance",
+    VIDEO_EDITING:"video_editing",
+    GAMING:"gaming",
+    INEGI_TOP:"inegi_top",
+    DELPHI_DEV:"delphi_dev",
+    GITLAB:"gitlab",
+    INEGI_MIDDLE:"inegi_middle",
+    JSF:"jsf",
+    INEGI_BOTTOM:"inegi_bottom",
+    VBA:"vba",
+    CSHARP_DEV:"csharp_dev",
+    ENGLISH:"english",
+    GRAPHIC_DESIGN:"graphic_design",
+    ADAPTABILITY:"adaptability",
+    WORK_ETHIC:"wrok_ethic",
+    JAVASCRIPT:"javascript",
+    DELPHI:"delphi",
+    JAVA:"java",
+    GIT:"git",
+    CSHARP:"csharp",
+    SQL:"sql"
+};
