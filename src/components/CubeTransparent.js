@@ -7,86 +7,99 @@ import { useThree } from "@react-three/fiber";
 import {positions, face_indexes} from "../utils/facesPositions";
 import {getAngleToMove,getDuration,isInsideArea} from "../utils/utils";
 
-const gltfName="/cubeTransparent2_d.gltf" ;
+const gltfName="/cubeTransparent_d.gltf" ;
 useGLTF.preload(gltfName);
 
 export  function CubeTransparent(props) {
   
-  const myGroup = useRef();
-  const myMesh = useRef();
+  //Declaring refs for group and mesh
+  const myCubeGroup = useRef();
+  const myCubeMesh = useRef();
+  //Get nodes,materials and scene from model
   const { nodes, materials, scene } = useGLTF(gltfName);
   scene.background= new THREE.Color(0x282c34);
   //Get camera object and intersetct from cursor
   const{camera,raycaster} =useThree();
   //Initial camera settings
-  const aspectRatio=16/9;
-  const fov = 50;
+  const aspectRatio=1.35;
+  const fov = 75;
+  //Add rezise event listener to window
+  window.addEventListener('resize', handleResize);
   //Hande mouseMove for extra features
   function handleMouseMove(e){
     //Get raycaster intersection with cube
-    const intersects= raycaster.intersectObject(myMesh.current,false);
-    //Get face of intersection
-    let resultObject;
+    const intersects= raycaster.intersectObject(myCubeMesh.current,false);
+    //Get face of intersection and evaluate if point inside notable area
+    let resultObject=null;
     switch (intersects[0].faceIndex) {
       case face_indexes[CUBE_FACES.INFO].lower: 
       case face_indexes[CUBE_FACES.INFO].upper:
         resultObject= isInsideArea(CUBE_FACES.INFO, intersects[0].point.x, intersects[0].point.y);
-        if(resultObject.inArea){
-          console.log("En " + resultObject.area);
-        }else{
-          console.log("no");
-        }
         break;
       case face_indexes[CUBE_FACES.EDUCATION].lower:
       case face_indexes[CUBE_FACES.EDUCATION].upper:
-        console.log("edu");
+        resultObject= isInsideArea(CUBE_FACES.EDUCATION, intersects[0].point.x, intersects[0].point.y);
         break;
       case face_indexes[CUBE_FACES.SKILLS].lower:
       case face_indexes[CUBE_FACES.SKILLS].upper:
-        console.log("skills");
+        resultObject= isInsideArea(CUBE_FACES.SKILLS, intersects[0].point.x, intersects[0].point.y);
         break;
       case face_indexes[CUBE_FACES.TECHNOLOGIES].lower:
       case face_indexes[CUBE_FACES.TECHNOLOGIES].upper:
-        console.log("tech");
+        resultObject= isInsideArea(CUBE_FACES.TECHNOLOGIES, intersects[0].point.x, intersects[0].point.y);
         break;
       case face_indexes[CUBE_FACES.EXPERIENCE].lower: 
       case face_indexes[CUBE_FACES.EXPERIENCE].upper:
-        console.log("xp");
+        resultObject= isInsideArea(CUBE_FACES.EXPERIENCE, intersects[0].point.x, intersects[0].point.y);
         break;
       case face_indexes[CUBE_FACES.INTERESTS].lower: 
       case face_indexes[CUBE_FACES.INTERESTS].upper:
-        console.log("inter");
+        resultObject= isInsideArea(CUBE_FACES.INTERESTS, intersects[0].point.x, intersects[0].point.y);
         break;
       default:
         break;
     }
-    //console.log(intersects[0].point)
-  };
-  //Add rezise event listener to window
-  window.addEventListener('resize', handleResize);
-  function handleResize(){
-    //limit when rezise is executed
-    if (window.innerWidth > 849){
-      return;
+
+    if(resultObject !== null){
+      if(resultObject.inArea){
+        //Change state for extra info
+        props.onExtraInfoChange(resultObject.area);
+        props.onInAreaChange(true);
+      } else {
+        props.onInAreaChange(false);
+      }
     }
-    const newAspect = window.innerWidth / window.innerHeight;
+  };
+
+  //Resize handler
+  function handleResize(){
+    let wFactor = 0.7;
+    let hFactor = 1;
+    let fov_=fov;
+    //limit when rezise is executed
+     if (window.innerWidth < 849){
+      wFactor= 1;
+      hFactor= 0.8;
+      fov_=62;
+    } 
+     const newAspect = (window.innerWidth * wFactor)/ (window.innerHeight * hFactor);
     if (newAspect < aspectRatio) {
       //When window is too narrow
       camera.aspect= newAspect;
-      const cameraHeight = Math.tan(THREE.MathUtils.degToRad(fov / 2));
+      const cameraHeight = Math.tan(THREE.MathUtils.degToRad(fov_ / 2));
       const ratio = camera.aspect / aspectRatio;
       const newCameraHeight = cameraHeight / ratio;
       let newFov= THREE.MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
       camera.fov =newFov;
-       
     } else {
       //When window fits camera
       camera.aspect=aspectRatio;
-      camera.fov=fov;
+      camera.fov=fov_;
     }
    camera.updateProjectionMatrix();
   };
 
+  //Adjust size at start
   useEffect(() => {
     handleResize();
     // eslint-disable-next-line react-hooks/exhaustive-deps  
@@ -101,8 +114,8 @@ export  function CubeTransparent(props) {
     function rotateXAxis(sign,amount,duration,delay_,finish, noConvertion){
       complete= finish ? props.onAnimationDone: null;
       converted= noConvertion ? amount : amount * (Math.PI/180); 
-      myGroup.current.rotation.order=ROTATION_ORDERS.X;
-        gsap.to(myGroup.current.rotation,{
+      myCubeGroup.current.rotation.order=ROTATION_ORDERS.X;
+        gsap.to(myCubeGroup.current.rotation,{
           x: sign + converted,
           duration: duration,
           delay: delay_,
@@ -114,8 +127,8 @@ export  function CubeTransparent(props) {
     function rotateYAxis(sign,amount,duration,delay_,finish, noConvertion){
       complete= finish ? props.onAnimationDone: null;
       converted= noConvertion ? amount : amount * (Math.PI/180); 
-      myGroup.current.rotation.order=ROTATION_ORDERS.Y;
-        gsap.to(myGroup.current.rotation,{
+      myCubeGroup.current.rotation.order=ROTATION_ORDERS.Y;
+        gsap.to(myCubeGroup.current.rotation,{
           y: sign + converted,
           duration: duration,
           delay: delay_,
@@ -127,8 +140,8 @@ export  function CubeTransparent(props) {
     function rotateZAxis(sign,amount,duration,delay_,finish, noConvertion){
       complete= finish ? props.onAnimationDone : null;
       converted= noConvertion ? amount : amount * (Math.PI/180); 
-      myGroup.current.rotation.order=ROTATION_ORDERS.Z;
-        gsap.to(myGroup.current.rotation,{
+      myCubeGroup.current.rotation.order=ROTATION_ORDERS.Z;
+        gsap.to(myCubeGroup.current.rotation,{
           z: sign + converted,
           duration: duration,
           delay: delay_,
@@ -139,30 +152,30 @@ export  function CubeTransparent(props) {
     //Rotate x,y,z axis to show wanted face
     function showFace(face){
       let angleSign, delay_=0,  duration_;
-      angleSign= getAngleToMove(myGroup.current.rotation.x, positions[face].x);
+      angleSign= getAngleToMove(myCubeGroup.current.rotation.x, positions[face].x);
       angleToMove= angleSign.angle;
       plusMinus= angleSign.plusMinus;
       duration_=getDuration(angleToMove);
       rotateXAxis(plusMinus, angleToMove, duration_, delay_, false,  true);
       delay_+= duration_ + 0.1;
-      angleSign= getAngleToMove(myGroup.current.rotation.y, positions[face].y);
+      angleSign= getAngleToMove(myCubeGroup.current.rotation.y, positions[face].y);
       angleToMove= angleSign.angle;
       plusMinus= angleSign.plusMinus;
       duration_= getDuration(angleToMove);
       rotateYAxis(plusMinus, angleToMove, duration_, delay_, false, true);
       delay_+= duration_ + 0.1;
-      angleSign= getAngleToMove(myGroup.current.rotation.z, positions[face].z);
+      angleSign= getAngleToMove(myCubeGroup.current.rotation.z, positions[face].z);
       angleToMove= angleSign.angle;
       plusMinus= angleSign.plusMinus;
       duration_= getDuration(angleToMove);
       rotateZAxis(plusMinus, angleToMove, duration_, delay_, true, true);
-    }
+    };
 
     switch (props.animation) {
       case ANIMATION_DIRECTIONS.START:
       //Animate object to appear from  top
-        if (myGroup.current.position.y !== 0){
-          gsap.to(myGroup.current.position,{
+        if (myCubeGroup.current.position.y !== 0){
+          gsap.to(myCubeGroup.current.position,{
             y: OPERATORS.MINUS_EQ + 7,
             duration: 0.6,
             ease: "power3.out",
@@ -228,8 +241,8 @@ export  function CubeTransparent(props) {
   }, [props.animation,props.onAnimationDone,props]);
   
   return (
-    <group ref={myGroup} scale={[2,2,2]} position={[0,7,0]} dispose={null} >
-      <mesh ref={myMesh} geometry={nodes.Cube.geometry} material={materials.transparent} onPointerMove={(e)=>{handleMouseMove(e)}}/>
+    <group ref={myCubeGroup} scale={[2,2,2]} position={[0,7,0]} dispose={null} >
+      <mesh ref={myCubeMesh} geometry={nodes.Cube.geometry} material={materials.transparent} onPointerMove={(e)=>{handleMouseMove(e)}}/>
     </group>
   )
 };
