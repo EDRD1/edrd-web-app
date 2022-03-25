@@ -159,14 +159,26 @@ function App() {
                 }}
                 />
               </Suspense>
-            </Canvas>   
+            </Canvas>  
+            <div className="upDiv noOutline">
+              <img className="arrowImage"  src="./arrow.png" alt="Up arrow"/>
+            </div>
+            <div className="downDiv noOutline">
+              <img className="arrowImage"  src="./arrow.png" alt="Down arrow"/>
+            </div> 
+            <div className="leftDiv noOutline">
+              <img className="arrowImage"  src="./arrow.png" alt="Left arrow"/>
+            </div> 
+            <div className="rightDiv noOutline">
+              <img className="arrowImage"  src="./arrow.png" alt="Right arrow"/>
+            </div> 
           </div>
         </ExtraInfoTooltip>
       </div>
       <ExtraInfoTooltip title={<div style={{fontSize:"16px"}}>Github repository</div>} >
-        <div className="floatingDiv">
+        <div className="floatingDivLeft noOutline">
           <a href="https://github.com/EDRD1/edrd-web-app" target="_blank" rel="noreferrer"> 
-            <img className="greenImage githubImage"  src="./github-logo.png" alt="Github logo"/>
+            <img className="githubImage"  src="./github-logo.png" alt="Github logo"/>
           </a>
         </div>
       </ExtraInfoTooltip>

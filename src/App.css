@@ -80,20 +80,62 @@
 .greenImage{
   filter: invert(61%) sepia(100%) saturate(1069%) hue-rotate(63deg) brightness(96%) contrast(99%);
 }
-.greenImage:hover{
-  filter: none; 
-}
+
 
 .githubImage{
   cursor: pointer;
   width: 75px;
   height: 75px;
+  opacity: 0.65;
+}
+.githubImage:hover{
+  opacity: 1; 
 }
 
-.floatingDiv{
+.floatingDivLeft{
   position: absolute;
   bottom: 4%;
   right: 92%;
+}
+
+.arrowImage{
+  cursor: pointer;
+  width: 75px;
+  height: 100px;
+  opacity: 0.5;
+}
+.arrowImage:hover{
+  opacity: 0.9;
+}
+.arrowImage:active{
+  transform: scale(1.1);
+}
+
+.upDiv{
+  position: fixed;
+  top:-1%;
+  left:73%;
+  transform: rotate(-90deg); 
+}
+.downDiv{
+  position: fixed;
+  top:85%;
+  left:73%;
+  transform: rotate(90deg);
+}
+.leftDiv{
+  position: fixed;
+  top:45%;
+  left:50%;
+  transform: rotate(180deg);
+}
+.rightDiv{
+  position: fixed;
+  top:45%;
+  left:94.5%;
+}
+
+.noOutline{
   outline: none !important;
   -webkit-tap-highlight-color: transparent !important;
 }
