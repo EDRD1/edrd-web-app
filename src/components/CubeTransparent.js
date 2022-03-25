@@ -241,7 +241,7 @@ export  function CubeTransparent(props) {
   }, [props.animation,props.onAnimationDone,props]);
   
   return (
-    <group ref={myCubeGroup} scale={[2,2,2]} position={[0,7,0]} dispose={null} >
+    <group ref={myCubeGroup} scale={[1.9,1.9,1.9]} position={[0,7,0]} dispose={null} >
       <mesh ref={myCubeMesh} geometry={nodes.Cube.geometry} material={materials.transparent} onPointerMove={(e)=>{handleMouseMove(e)}}/>
     </group>
   )
