@@ -161,16 +161,16 @@ function App() {
               </Suspense>
             </Canvas>  
             <div className="upDiv noOutline">
-              <img className="arrowImage"  src="./arrow.png" alt="Up arrow"/>
+              <img className="arrowImage"  src="./arrow.png" alt="Up arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.UP); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
             </div>
             <div className="downDiv noOutline">
-              <img className="arrowImage"  src="./arrow.png" alt="Down arrow"/>
+              <img className="arrowImage"  src="./arrow.png" alt="Down arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.DOWN); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
             </div> 
             <div className="leftDiv noOutline">
-              <img className="arrowImage"  src="./arrow.png" alt="Left arrow"/>
+              <img className="arrowImage"  src="./arrow.png" alt="Left arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.LEFT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
             </div> 
             <div className="rightDiv noOutline">
-              <img className="arrowImage"  src="./arrow.png" alt="Right arrow"/>
+              <img className="arrowImage"  src="./arrow.png" alt="Right arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.RIGHT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
             </div> 
           </div>
         </ExtraInfoTooltip>
