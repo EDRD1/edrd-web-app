@@ -40,7 +40,7 @@ export function ExtraInfoHTML(props) {
         case CUBE_AREAS.LOCATION:
             return (
                 <div>
-                    <h4>Aguascalientes.</h4>
+                    <h4>Aguascalientes</h4>
                     <div>
                     <img className="extraInfoImage" height="150" width="200" src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Location_Aguascalientes.png" alt="Map"/>
                     <br/>
@@ -366,12 +366,95 @@ export function ExtraInfoHTML(props) {
                 </div>
             );
         case CUBE_AREAS.JAVASCRIPT:
+            return (
+                <div>
+                    <h4>JavaScript</h4>
+                    <div>
+                        <Typewriter
+                            onInit={(typewriter)=>{
+                                typewriter
+                                .typeString('Frequent usage.')
+                                .start()
+                            }}
+                        />
+                    </div>   
+                </div>
+            );
         case CUBE_AREAS.DELPHI:
+            return (
+                <div>
+                    <h4>Delphi</h4>
+                    <div>
+                        <Typewriter
+                            onInit={(typewriter)=>{
+                                typewriter
+                                .typeString('Almost daily usage.')
+                                .start()
+                            }}
+                        />
+                    </div>   
+                </div>
+            );
         case CUBE_AREAS.JAVA:
+            return (
+                <div>
+                    <h4>Java</h4>
+                    <div>
+                        <Typewriter
+                            onInit={(typewriter)=>{
+                                typewriter
+                                .typeString('Experience with previous work.')
+                                .start()
+                            }}
+                        />
+                    </div>   
+                </div>
+            );
         case CUBE_AREAS.GIT:
+            return (
+                <div>
+                    <h4>Git</h4>
+                    <div>
+                        <Typewriter
+                            onInit={(typewriter)=>{
+                                typewriter
+                                .typeString('Almost daily usage.')
+                                .start()
+                            }}
+                        />
+                    </div>   
+                </div>
+            );
         case CUBE_AREAS.CSHARP:
+            return (
+                <div>
+                    <h4>C#</h4>
+                    <div>
+                        <Typewriter
+                            onInit={(typewriter)=>{
+                                typewriter
+                                .typeString('Experience with previous work.')
+                                .start()
+                            }}
+                        />
+                    </div>   
+                </div>
+            );
         case CUBE_AREAS.SQL:
-            break;
+            return (
+                <div>
+                    <h4>SQL</h4>
+                    <div>
+                        <Typewriter
+                            onInit={(typewriter)=>{
+                                typewriter
+                                .typeString('Somewhat frequent usage.')
+                                .start()
+                            }}
+                        />
+                    </div>   
+                </div>
+            );
         default:
             break;
     }

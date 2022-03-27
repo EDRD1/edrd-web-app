@@ -102,12 +102,22 @@ export  function CubeTransparent(props) {
   //Adjust size at start
   useEffect(() => {
     handleResize();
+    //Animate object to appear from  top
+    if (myCubeGroup.current.position.y !== 0){
+      gsap.to(myCubeGroup.current.position,{
+        y: OPERATORS.MINUS_EQ + 7,
+        duration: 0.6,
+        ease: "power3.out",
+        delay: 0
+      }); 
+    }
+    props.afterStart();
     // eslint-disable-next-line react-hooks/exhaustive-deps  
   },[]);
   
   
 
-  //Render animation
+  //Render animations
   useEffect(() => {
     let angleToMove, plusMinus, complete, converted;
     //Rotate x axis based on parameters
@@ -173,15 +183,6 @@ export  function CubeTransparent(props) {
 
     switch (props.animation) {
       case ANIMATION_DIRECTIONS.START:
-      //Animate object to appear from  top
-        if (myCubeGroup.current.position.y !== 0){
-          gsap.to(myCubeGroup.current.position,{
-            y: OPERATORS.MINUS_EQ + 7,
-            duration: 0.6,
-            ease: "power3.out",
-            delay: 0
-          }); 
-        }
         break;
       //Stand by
       case ANIMATION_DIRECTIONS.STANDBY:
