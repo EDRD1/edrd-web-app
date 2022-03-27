@@ -179,16 +179,16 @@ function App() {
               </Suspense>
             </Canvas>  
             <div className="upDiv noOutline" >
-              <img className={arrowsStyle} src="./arrow.png" alt="Up arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.UP); setIsBtnDisabled(true)}} disabled={isBtnDisabled} />
+              <img className={arrowsStyle} src="./arrow.png" alt="Up arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.UP); }} disabled={isBtnDisabled} />
             </div>
             <div className="downDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Down arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.DOWN); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Down arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.DOWN);}} disabled={isBtnDisabled}/>
             </div> 
             <div className="leftDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Left arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.LEFT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Left arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.LEFT);}} disabled={isBtnDisabled}/>
             </div> 
             <div className="rightDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Right arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.RIGHT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Right arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.RIGHT);}} disabled={isBtnDisabled}/>
             </div> 
           </div>
         </ExtraInfoTooltip>
