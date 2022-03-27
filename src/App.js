@@ -26,12 +26,14 @@ const Wrapper=styled.div`
 
 const ExtraInfoTooltip = withStyles(theme => ({
    tooltip: {
+    overflow:"hidden",
     backgroundColor: "rgba(6, 127, 128,0.90)",
     color: "#0cfeff",
-    fontSize: "24px",
+    fontSize: "22px",
     fontFamily:"Orbitron, serif",
     border: "2px solid #0cfeff",
     maxWidth:"325px",
+    maxHeight:"495px",
     "@media only screen and (max-width:850px)":{
       fontSize: "16px",
     }
@@ -86,7 +88,21 @@ function App() {
               <ExtraInfoHTML area={extraInfo}></ExtraInfoHTML>
             }
             //Make tooltip shown at cursor coordinates
-            onMouseMove={e => setMousePosition({ x: e.pageX, y: e.pageY })}
+            onMouseMove={e =>{
+              let diff=0;
+              if(e.pageX + 325 >  window.innerWidth){
+                diff = (e.pageX + (325)) - window.innerWidth;
+                setMousePosition({ x: e.pageX - (diff+10), y: e.pageY })
+              }else{
+                if(e.pageY + 495 >  window.innerHeight){
+                  diff= (e.pageY + (495)) - window.innerWidth;
+                  setMousePosition({ x: e.pageX , y: e.pageY + (diff+10) })
+                }else{
+                  setMousePosition({ x: e.pageX, y: e.pageY });
+                }
+              }
+              
+            } }
             PopperProps={{
               anchorEl: {
                 clientHeight: 0,
@@ -163,22 +179,22 @@ function App() {
               </Suspense>
             </Canvas>  
             <div className="upDiv noOutline" >
-              <img className={arrowsStyle} src="./arrow.png" alt="Up arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.UP); setIsBtnDisabled(true)}} disabled={isBtnDisabled} />
+              <img className={arrowsStyle} src="./arrow.png" alt="Up arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.UP); }} disabled={isBtnDisabled} />
             </div>
             <div className="downDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Down arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.DOWN); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Down arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.DOWN);}} disabled={isBtnDisabled}/>
             </div> 
             <div className="leftDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Left arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.LEFT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Left arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.LEFT);}} disabled={isBtnDisabled}/>
             </div> 
             <div className="rightDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Right arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.RIGHT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Right arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.RIGHT);}} disabled={isBtnDisabled}/>
             </div> 
           </div>
         </ExtraInfoTooltip>
       </div>
       <ExtraInfoTooltip title={<div style={{fontSize:"16px"}}>Github repository</div>} >
-        <div className="floatingDivLeft noOutline">
+        <div className="githubDiv noOutline">
           <a href="https://github.com/EDRD1/edrd-web-app" target="_blank" rel="noreferrer"> 
             <img className="githubImage"  src="./github-logo.png" alt="Github logo"/>
           </a>

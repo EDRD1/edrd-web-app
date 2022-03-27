@@ -1,7 +1,10 @@
 .App {
   text-align: center;
-  background-image: linear-gradient(180deg, rgba(1,0,9,1) 60%, rgba(3,3,25,1) 97%);
-  background-size: cover;
+  background: rgb(1,0,9);
+  background: -moz-linear-gradient(180deg, rgba(1,0,9,1) 60%, rgba(3,3,25,1) 97%);
+  background: -webkit-linear-gradient(180deg, rgba(1,0,9,1) 60%, rgba(3,3,25,1) 97%);
+  background: linear-gradient(180deg, rgba(1,0,9,1) 60%, rgba(3,3,25,1) 97%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#010009",endColorstr="#030319",GradientType=1);
 }
 
 .App-header {
@@ -94,9 +97,9 @@
   opacity: 1; 
 }
 
-.floatingDivLeft{
+.githubDiv{
   position: fixed;
-  top:89vh;
+  top:87vh;
   left:2vw;
 }
 
@@ -147,6 +150,13 @@
   -webkit-tap-highlight-color: transparent !important;
 }
 
+@media only screen and (max-width:1368px){
+  .leftDiv{
+    left: 52vw;
+  }
+
+}
+
 @media only screen and (max-width:850px){
   .btnDirection{
     display: inline !important;
@@ -193,4 +203,17 @@
     left:87vw;
   }
 
+}
+
+@media only screen and (max-height:725px){
+  .arrowImage{
+    width: 35px;
+    height: 75px;
+  }
+  .upDiv{
+    top: -2.5vh;
+  }
+  .downDiv{
+    top: 90vh;
+  }
 }

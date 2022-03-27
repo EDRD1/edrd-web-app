@@ -93,8 +93,7 @@ export  function CubeTransparent(props) {
       camera.fov =newFov;
     } else {
       //When window fits camera
-      camera.aspect=aspectRatio;
-      camera.fov=fov_;
+ 
     }
    camera.updateProjectionMatrix();
   };
