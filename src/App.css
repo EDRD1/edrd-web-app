@@ -81,7 +81,9 @@
   filter: invert(61%) sepia(100%) saturate(1069%) hue-rotate(63deg) brightness(96%) contrast(99%);
 }
 
-
+.opacity0{
+  opacity: 0;
+}
 .githubImage{
   cursor: pointer;
   width: 75px;
@@ -103,7 +105,12 @@
   width: 75px;
   height: 100px;
   opacity: 0.5;
+  transition: opacity 1.2s;
 }
+.noTransition{
+  transition: none !important;
+}
+
 .arrowImage:hover{
   opacity: 0.9;
 }

@@ -43,8 +43,9 @@ const ExtraInfoTooltip = withStyles(theme => ({
 }))(Tooltip);
 
 function App() {
-  const [animation, setAnimation] =useState(ANIMATION_DIRECTIONS.START);
-  const [isBtnDisabled,setIsBtnDisabled]=useState(false);
+  const [animation, setAnimation] =useState(ANIMATION_DIRECTIONS.STANDBY);
+  const [isBtnDisabled,setIsBtnDisabled]=useState(true);
+  const [arrowsStyle,setArrowsStyle]=useState("opacity0");
   const [extraInfo, setExtraInfo]= useState(CUBE_AREAS.NONE);
   const [isTooltipOpen, setIsTooltipOpen]=useState(false);
   const [mousePosition, setMousePosition] = useState({ x: undefined, y: undefined });
@@ -76,18 +77,6 @@ function App() {
               {CUBE_FACES.INTERESTS}
             </button>   
           </div>
-        { /* <button  className="btnDirection" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.UP); setIsBtnDisabled(true)}} disabled={isBtnDisabled}>
-            {ANIMATION_DIRECTIONS.UP}
-            </button>
-            <button  className="btnDirection" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.DOWN); setIsBtnDisabled(true)}} disabled={isBtnDisabled}>
-            {ANIMATION_DIRECTIONS.DOWN}
-            </button>
-            <button  className="btnDirection" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.LEFT); setIsBtnDisabled(true)}} disabled={isBtnDisabled} >
-            {ANIMATION_DIRECTIONS.LEFT}
-            </button>
-            <button  className="btnDirection" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.RIGHT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}>
-            {ANIMATION_DIRECTIONS.RIGHT}
-            </button> */}    
         </div>
           <ExtraInfoTooltip 
             interactive
@@ -120,7 +109,20 @@ function App() {
                 <directionalLight position={[-10,-4,-1]} intensity={0.07} color={0x66afd9}/>
                 <OrbitControls ref={orbitControls} enableZoom={false}/>
                 <CubeTransparent 
-                animation={animation} 
+                animation={animation}
+                //Event after loading page
+                afterStart={()=>{              
+                  setTimeout(function() {
+                    //Make arrows visible
+                    setArrowsStyle("arrowImage");
+                    //Enable buttons
+                    setIsBtnDisabled(false);
+                    setTimeout(function() {
+                      //Disable opacity transition
+                      setArrowsStyle("arrowImage noTransition");
+                    }, 1200);  
+                  }, 2000);       
+                }}
                 onAnimationDone={()=>{
                   //Returns camera to original state if altered by orbit controls
                   if (Object.values(CUBE_FACES).includes(animation)){
@@ -151,7 +153,7 @@ function App() {
                     if(!inArea){
                       setTimeout(function() {
                       setIsTooltipOpen(inArea); 
-                    }, 100);
+                      }, 100);
                     } else {
                       setIsTooltipOpen(inArea);
                     }  
@@ -160,17 +162,17 @@ function App() {
                 />
               </Suspense>
             </Canvas>  
-            <div className="upDiv noOutline">
-              <img className="arrowImage"  src="./arrow.png" alt="Up arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.UP); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+            <div className="upDiv noOutline" >
+              <img className={arrowsStyle} src="./arrow.png" alt="Up arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.UP); setIsBtnDisabled(true)}} disabled={isBtnDisabled} />
             </div>
             <div className="downDiv noOutline">
-              <img className="arrowImage"  src="./arrow.png" alt="Down arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.DOWN); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Down arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.DOWN); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
             </div> 
             <div className="leftDiv noOutline">
-              <img className="arrowImage"  src="./arrow.png" alt="Left arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.LEFT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Left arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.LEFT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
             </div> 
             <div className="rightDiv noOutline">
-              <img className="arrowImage"  src="./arrow.png" alt="Right arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.RIGHT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Right arrow" onClick={()=>{setAnimation(ANIMATION_DIRECTIONS.RIGHT); setIsBtnDisabled(true)}} disabled={isBtnDisabled}/>
             </div> 
           </div>
         </ExtraInfoTooltip>
