@@ -167,6 +167,7 @@
   }
   .contentContainer{
     display: block;
+    
   }
   .buttonsContainer{
     display: inline;
@@ -216,4 +217,13 @@
   .downDiv{
     top: 90vh;
   }
+}
+
+@media screen and (orientation:portrait) {
+  .upDiv{
+    top: 25vh;
+  } 
+  .downDiv{
+    left:44vw;
+  } 
 }

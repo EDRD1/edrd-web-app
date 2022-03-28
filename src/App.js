@@ -3,13 +3,13 @@ import {Canvas} from "@react-three/fiber";
 import styled from 'styled-components';
 import { Suspense,useState,useRef} from 'react';
 import {CubeTransparent} from "./components/CubeTransparent";
-import { ANIMATION_DIRECTIONS, CUBE_FACES, CUBE_AREAS} from './utils/enums';
+import { ANIMATION_DIRECTIONS, CUBE_FACES, CUBE_AREAS, SOUNDS} from './utils/enums';
 import { INITIAL_CAMERA_ANGLES } from './utils/facesPositions';
 import {OrbitControls} from '@react-three/drei';
 import Tooltip from "@material-ui/core/Tooltip";
 import {withStyles} from "@material-ui/core/styles";
 import {ExtraInfoHTML} from "./components/ExtraInfo";
-
+import { playAudio } from './utils/utils';
 //Styled components wrapper
 const Wrapper=styled.div`
   canvas{
@@ -58,24 +58,24 @@ function App() {
   return (
     <Wrapper className="App">
       <div className="contentContainer">
-        <div className="buttonsContainer" onMouseEnter={()=>{setIsTooltipOpen(false)}}>
+        <div className="buttonsContainer" onMouseEnter={()=>{setIsTooltipOpen(false);}}>
           <div className="facesTextContainer">
-            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INFO); setIsBtnDisabled(true)}} disabled={isBtnDisabled}>
+            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INFO); setIsBtnDisabled(true); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}>
               {CUBE_FACES.INFO}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EDUCATION); setIsBtnDisabled(true)}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EDUCATION); setIsBtnDisabled(true); playAudio(SOUNDS.NEXT);}} disabled={isBtnDisabled}>
               {CUBE_FACES.EDUCATION}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.SKILLS); setIsBtnDisabled(true)}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.SKILLS); setIsBtnDisabled(true); playAudio(SOUNDS.NEXT);}} disabled={isBtnDisabled}>
               {CUBE_FACES.SKILLS}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.TECHNOLOGIES); setIsBtnDisabled(true)}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.TECHNOLOGIES); setIsBtnDisabled(true); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}>
               {CUBE_FACES.TECHNOLOGIES}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EXPERIENCE); setIsBtnDisabled(true)}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EXPERIENCE); setIsBtnDisabled(true); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}>
               {CUBE_FACES.EXPERIENCE}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INTERESTS); setIsBtnDisabled(true)}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INTERESTS); setIsBtnDisabled(true);playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}>
               {CUBE_FACES.INTERESTS}
             </button>   
           </div>
@@ -94,15 +94,10 @@ function App() {
                 diff = (e.pageX + (325)) - window.innerWidth;
                 setMousePosition({ x: e.pageX - (diff+10), y: e.pageY })
               }else{
-                if(e.pageY + 495 >  window.innerHeight){
-                  diff= (e.pageY + (495)) - window.innerWidth;
-                  setMousePosition({ x: e.pageX , y: e.pageY + (diff+10) })
-                }else{
                   setMousePosition({ x: e.pageX, y: e.pageY });
                 }
-              }
-              
-            } }
+              } 
+            } 
             PopperProps={{
               anchorEl: {
                 clientHeight: 0,
@@ -179,16 +174,16 @@ function App() {
               </Suspense>
             </Canvas>  
             <div className="upDiv noOutline" >
-              <img className={arrowsStyle} src="./arrow.png" alt="Up arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.UP); }} disabled={isBtnDisabled} />
+              <img className={arrowsStyle} src="./arrow.png" alt="Up arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.UP); playAudio(SOUNDS.NEXT);}} disabled={isBtnDisabled} />
             </div>
             <div className="downDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Down arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.DOWN);}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Down arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.DOWN); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}/>
             </div> 
             <div className="leftDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Left arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.LEFT);}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Left arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.LEFT); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}/>
             </div> 
             <div className="rightDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Right arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.RIGHT);}} disabled={isBtnDisabled}/>
+              <img className={arrowsStyle}  src="./arrow.png" alt="Right arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.RIGHT); playAudio(SOUNDS.NEXT);}} disabled={isBtnDisabled}/>
             </div> 
           </div>
         </ExtraInfoTooltip>

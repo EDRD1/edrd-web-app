@@ -1,5 +1,6 @@
-import { OPERATORS} from "./enums";
+import { OPERATORS, SOUNDS} from "./enums";
 import { face_areas } from "./facesPositions";
+import { useRef,useEffect } from "react";
 
 //Get += or -= based on number
 export function getPlusMinus (num){
@@ -58,3 +59,37 @@ export function isInsideArea(face, x ,y){
    return {inArea:inArea_,area:area_};
 };
 
+let soundNext= new Audio("./sound1.ogg");
+let soundPrev= new Audio("./sound2.ogg");
+let soundExpand= new Audio("./sound3.ogg");
+
+export function playAudio( audio){
+    soundNext.pause();
+    soundNext.currentTime = 0;  
+    soundPrev.pause();
+    soundPrev.currentTime = 0;
+    soundExpand.pause();
+    soundExpand.currentTime = 0;  
+    switch (audio) {
+        case SOUNDS.NEXT:
+            soundNext.play();
+            break;
+        case SOUNDS.PREV:
+            soundPrev.play();
+            break;
+        case SOUNDS.EXPAND:
+            soundExpand.play();
+            break;
+        default:
+            break;
+    }
+};
+
+export function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value; 
+    },[value]); 
+    return ref.current; 
+};
+ 
