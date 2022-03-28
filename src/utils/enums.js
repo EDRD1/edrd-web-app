@@ -61,3 +61,9 @@ export const CUBE_AREAS={
     CSHARP:"csharp",
     SQL:"sql"
 };
+
+export const SOUNDS={
+    NEXT:"next",
+    PREV:"prev",
+    EXPAND:"expand"
+};
