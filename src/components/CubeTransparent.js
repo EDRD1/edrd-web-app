@@ -5,7 +5,7 @@ import { ANIMATION_DIRECTIONS, CUBE_FACES, ROTATION_ORDERS, OPERATORS } from "..
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import {positions, face_indexes} from "../utils/facesPositions";
-import {getAngleToMove,getDuration,isInsideArea} from "../utils/utils";
+import {getAngleToMove,getDuration,isInsideArea, usePrevious} from "../utils/utils";
 
 const gltfName="/cubeTransparent_d.gltf" ;
 useGLTF.preload(gltfName);
@@ -15,6 +15,7 @@ export  function CubeTransparent(props) {
   //Declaring refs for group and mesh
   const myCubeGroup = useRef();
   const myCubeMesh = useRef();
+  const prevAnimation= usePrevious(props.animation);
   //Get nodes,materials and scene from model
   const { nodes, materials, scene } = useGLTF(gltfName);
   scene.background= new THREE.Color(0x282c34);
@@ -93,7 +94,7 @@ export  function CubeTransparent(props) {
       camera.fov =newFov;
     } else {
       //When window fits camera
- 
+      camera.fov= fov;
     }
    camera.updateProjectionMatrix();
   };
@@ -179,7 +180,12 @@ export  function CubeTransparent(props) {
       duration_= getDuration(angleToMove);
       rotateZAxis(plusMinus, angleToMove, duration_, delay_, true, true);
     };
-
+    
+    //Only enter when animation changes
+    if(props.animation === prevAnimation) {
+      return;
+    }
+    
     switch (props.animation) {
       case ANIMATION_DIRECTIONS.START:
         break;
@@ -238,7 +244,7 @@ export  function CubeTransparent(props) {
         break;
     }
 
-  }, [props.animation,props.onAnimationDone,props]);
+  }, [props.animation,props.onAnimationDone,prevAnimation]);
   
   return (
     <group ref={myCubeGroup} scale={[1.9,1.9,1.9]} position={[0,7,0]} dispose={null} >
