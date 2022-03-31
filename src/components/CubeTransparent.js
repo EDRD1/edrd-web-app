@@ -1,17 +1,17 @@
-import React, { useRef,useEffect } from "react";
+import React, { useRef,useEffect,useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import gsap from "gsap";
-import { ANIMATION_DIRECTIONS, CUBE_FACES, ROTATION_ORDERS, OPERATORS } from "../utils/enums";
+import { ANIMATION_DIRECTIONS, CUBE_FACES, ROTATION_ORDERS, OPERATORS, SOUNDS } from "../utils/enums";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
-import {positions, face_indexes} from "../utils/facesPositions";
-import {getAngleToMove,getDuration,isInsideArea, usePrevious} from "../utils/utils";
+import {positions} from "../utils/facesPositions";
+import {isInsideArea, usePrevious, getFace, playAudio} from "../utils/utils";
 
 const gltfName="/cubeTransparent_d.gltf" ;
 useGLTF.preload(gltfName);
 
+/* ------------------------------------------------------------------------------------------ */
 export  function CubeTransparent(props) {
-  
   //Declaring refs for group and mesh
   const myCubeGroup = useRef();
   const myCubeMesh = useRef();
@@ -21,47 +21,23 @@ export  function CubeTransparent(props) {
   scene.background= new THREE.Color(0x282c34);
   //Get camera object and intersetct from cursor
   const{camera,raycaster} =useThree();
+  //Camera raycaster
+  const raycasterCamera= useMemo(() => new THREE.Raycaster(),[]);
+  raycasterCamera.setFromCamera( new THREE.Vector2(), camera );
+  //Correct rotation quaternion
+  const wantedQaternion= useMemo(() => new THREE.Quaternion(),[]);
   //Initial camera settings
   const aspectRatio=1.35;
   const fov = 75;
   //Add rezise event listener to window
   window.addEventListener('resize', handleResize);
+  /* ------------------------------------------------------------------------------------------ */
   //Hande mouseMove for extra features
   function handleMouseMove(e){
     //Get raycaster intersection with cube
     const intersects= raycaster.intersectObject(myCubeMesh.current,false);
     //Get face of intersection and evaluate if point inside notable area
-    let resultObject=null;
-    switch (intersects[0].faceIndex) {
-      case face_indexes[CUBE_FACES.INFO].lower: 
-      case face_indexes[CUBE_FACES.INFO].upper:
-        resultObject= isInsideArea(CUBE_FACES.INFO, intersects[0].point.x, intersects[0].point.y);
-        break;
-      case face_indexes[CUBE_FACES.EDUCATION].lower:
-      case face_indexes[CUBE_FACES.EDUCATION].upper:
-        resultObject= isInsideArea(CUBE_FACES.EDUCATION, intersects[0].point.x, intersects[0].point.y);
-        break;
-      case face_indexes[CUBE_FACES.SKILLS].lower:
-      case face_indexes[CUBE_FACES.SKILLS].upper:
-        resultObject= isInsideArea(CUBE_FACES.SKILLS, intersects[0].point.x, intersects[0].point.y);
-        break;
-      case face_indexes[CUBE_FACES.TECHNOLOGIES].lower:
-      case face_indexes[CUBE_FACES.TECHNOLOGIES].upper:
-        resultObject= isInsideArea(CUBE_FACES.TECHNOLOGIES, intersects[0].point.x, intersects[0].point.y);
-        break;
-      case face_indexes[CUBE_FACES.EXPERIENCE].lower: 
-      case face_indexes[CUBE_FACES.EXPERIENCE].upper:
-        resultObject= isInsideArea(CUBE_FACES.EXPERIENCE, intersects[0].point.x, intersects[0].point.y);
-        break;
-      case face_indexes[CUBE_FACES.INTERESTS].lower: 
-      case face_indexes[CUBE_FACES.INTERESTS].upper:
-        resultObject= isInsideArea(CUBE_FACES.INTERESTS, intersects[0].point.x, intersects[0].point.y);
-        break;
-      default:
-        break;
-    }
-
-    if(resultObject !== null){
+    let resultObject= isInsideArea(getFace(intersects[0].faceIndex), intersects[0].point.x, intersects[0].point.y);    if(resultObject !== null){
       if(resultObject.inArea){
         //Change state for extra info
         props.onExtraInfoChange(resultObject.area);
@@ -71,7 +47,7 @@ export  function CubeTransparent(props) {
       }
     }
   };
-
+  /* ------------------------------------------------------------------------------------------ */
   //Resize handler
   function handleResize(){
     let wFactor = 0.7;
@@ -98,7 +74,7 @@ export  function CubeTransparent(props) {
     }
    camera.updateProjectionMatrix();
   };
-
+  /* ------------------------------------------------------------------------------------------ */
   //Adjust size at start
   useEffect(() => {
     handleResize();
@@ -114,12 +90,11 @@ export  function CubeTransparent(props) {
     props.afterStart();
     // eslint-disable-next-line react-hooks/exhaustive-deps  
   },[]);
-  
-  
-
+  /* ------------------------------------------------------------------------------------------ */
   //Render animations
   useEffect(() => {
-    let angleToMove, plusMinus, complete, converted;
+    let complete, converted;
+    /* ------------------------------------------------------------------------------------------ */
     //Rotate x axis based on parameters
     function rotateXAxis(sign,amount,duration,delay_,finish, noConvertion){
       complete= finish ? props.onAnimationDone: null;
@@ -132,7 +107,7 @@ export  function CubeTransparent(props) {
           onComplete: complete
         });
     };
-
+    /* ------------------------------------------------------------------------------------------ */
     //Rotate y axis based on parameters
     function rotateYAxis(sign,amount,duration,delay_,finish, noConvertion){
       complete= finish ? props.onAnimationDone: null;
@@ -145,58 +120,56 @@ export  function CubeTransparent(props) {
           onComplete: complete
         });
     };
-
-    //Rotate z axis based on parameters
-    function rotateZAxis(sign,amount,duration,delay_,finish, noConvertion){
-      complete= finish ? props.onAnimationDone : null;
-      converted= noConvertion ? amount : amount * (Math.PI/180); 
-      myCubeGroup.current.rotation.order=ROTATION_ORDERS.Z;
-        gsap.to(myCubeGroup.current.rotation,{
-          z: sign + converted,
-          duration: duration,
-          delay: delay_,
-          onComplete: complete
-        });
-    };
-
-    //Rotate x,y,z axis to show wanted face
+    /* ------------------------------------------------------------------------------------------ */
+    //Compare and correct current rotation of cube to wanted rotation to show face
     function showFace(face){
-      let angleSign, delay_=0,  duration_;
-      angleSign= getAngleToMove(myCubeGroup.current.rotation.x, positions[face].x);
-      angleToMove= angleSign.angle;
-      plusMinus= angleSign.plusMinus;
-      duration_=getDuration(angleToMove);
-      rotateXAxis(plusMinus, angleToMove, duration_, delay_, false,  true);
-      delay_+= duration_ + 0.1;
-      angleSign= getAngleToMove(myCubeGroup.current.rotation.y, positions[face].y);
-      angleToMove= angleSign.angle;
-      plusMinus= angleSign.plusMinus;
-      duration_= getDuration(angleToMove);
-      rotateYAxis(plusMinus, angleToMove, duration_, delay_, false, true);
-      delay_+= duration_ + 0.1;
-      angleSign= getAngleToMove(myCubeGroup.current.rotation.z, positions[face].z);
-      angleToMove= angleSign.angle;
-      plusMinus= angleSign.plusMinus;
-      duration_= getDuration(angleToMove);
-      rotateZAxis(plusMinus, angleToMove, duration_, delay_, true, true);
+      wantedQaternion.setFromEuler(new THREE.Euler( positions[face].x, positions[face].y, positions[face].z, 'XYZ' ));
+      let isEqualQuaternion=wantedQaternion.equals(myCubeGroup.current.quaternion);
+        gsap.to({}, {
+            duration: isEqualQuaternion ? 0.001 : 1,
+            onUpdate: function() {
+              myCubeGroup.current.quaternion.slerp(wantedQaternion, this.progress());
+            },
+            onComplete:props.onAnimationDone
+        });
+
     };
-    
+    /* ------------------------------------------------------------------------------------------ */
+    //Correct position of face if needed
+    function detectFaceAndCorrect(){
+      const intersectsCamera= raycasterCamera.intersectObject(myCubeMesh.current,false);
+      showFace(getFace(intersectsCamera[0].faceIndex));     
+    };
+    /* ------------------------------------------------------------------------------------------ */
+    //Compare if current face same as wanted face and show it
+    function compareFaceAndShow(sound){
+      const intersectsCamera= raycasterCamera.intersectObject(myCubeMesh.current,false);
+      if(getFace(intersectsCamera[0].faceIndex) !== props.animation){
+        playAudio(sound);
+      }
+      showFace(props.animation);
+    };
+    /* ------------------------------------------------------------------------------------------ */
     //Only enter when animation changes
     if(props.animation === prevAnimation) {
       return;
     }
-    
     switch (props.animation) {
+      //Starging
       case ANIMATION_DIRECTIONS.START:
         break;
       //Stand by
       case ANIMATION_DIRECTIONS.STANDBY:
+        //Camera raycaster intersect to check current face
+        if([ANIMATION_DIRECTIONS.UP, ANIMATION_DIRECTIONS.DOWN, ANIMATION_DIRECTIONS.LEFT, ANIMATION_DIRECTIONS.RIGHT].includes(prevAnimation)){
+          detectFaceAndCorrect();
+        }
         break;
       //Animate cube to show next face on top
       case ANIMATION_DIRECTIONS.UP:
         rotateXAxis(OPERATORS.MINUS_EQ, 20, 0.3, 0, false, false);
         rotateXAxis(OPERATORS.PLUS_EQ, 120, 0.3, 0.4, false, false);
-        rotateXAxis(OPERATORS.MINUS_EQ, 10, 0.2, 0.8, true, false);
+        rotateXAxis(OPERATORS.MINUS_EQ, 10, 0.2, 0.8, true, false);     
         break;
       //Animate cube to show next face down
       case ANIMATION_DIRECTIONS.DOWN:
@@ -216,36 +189,38 @@ export  function CubeTransparent(props) {
         rotateYAxis(OPERATORS.PLUS_EQ, 120, 0.3, 0.4, false, false);
         rotateYAxis(OPERATORS.MINUS_EQ, 10, 0.2, 0.8, true, false);
         break;
-      //Animate to show INFO face
+      //Show INFO face
       case CUBE_FACES.INFO:
-        showFace(CUBE_FACES.INFO);
+        compareFaceAndShow(SOUNDS.PREV);
         break;
-      //Animate to show EDUCATION face
+      //Show EDUCATION face
       case CUBE_FACES.EDUCATION:
-        showFace(CUBE_FACES.EDUCATION);
+        compareFaceAndShow(SOUNDS.NEXT);
         break;
-      //Animate to show SKILLS face
+      //Show SKILLS face
       case CUBE_FACES.SKILLS:
-        showFace(CUBE_FACES.SKILLS);
+        compareFaceAndShow(SOUNDS.NEXT);
         break;
-      //Animate to show TECHNOLOGIES face
+      //Show TECHNOLOGIES face
       case CUBE_FACES.TECHNOLOGIES:
-        showFace(CUBE_FACES.TECHNOLOGIES);
+        compareFaceAndShow(SOUNDS.PREV);
         break;
-      //Animate to show EXPERIENCE face
+      //Show EXPERIENCE face
       case CUBE_FACES.EXPERIENCE:
-        showFace(CUBE_FACES.EXPERIENCE);
+        compareFaceAndShow(SOUNDS.PREV);
         break;
-      //Animate to show INTERESTS face
+      //Show INTERESTS face
       case CUBE_FACES.INTERESTS:
-        showFace(CUBE_FACES.INTERESTS);
+        compareFaceAndShow(SOUNDS.PREV);
         break;
     default:
         break;
     }
+    
 
-  }, [props.animation,props.onAnimationDone,prevAnimation]);
-  
+  }, [props.animation,props.onAnimationDone,prevAnimation,raycasterCamera,wantedQaternion]);
+
+  /* ------------------------------------------------------------------------------------------ */
   return (
     <group ref={myCubeGroup} scale={[1.9,1.9,1.9]} position={[0,7,0]} dispose={null} >
       <mesh ref={myCubeMesh} geometry={nodes.Cube.geometry} material={materials.transparent} onPointerMove={(e)=>{handleMouseMove(e)}}/>
