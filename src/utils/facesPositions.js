@@ -9,6 +9,7 @@ export const positions={
     [CUBE_FACES.SKILLS]:{ x:0 , y:-1.570796 , z:0},
     [CUBE_FACES.TECHNOLOGIES]:{ x:0 , y:1.570796 , z:0}
 };
+Object.freeze(positions);
 
 //Indexes of cube faces
 export const face_indexes={
@@ -19,6 +20,7 @@ export const face_indexes={
     [CUBE_FACES.SKILLS]:{upper:1378, lower:1379},
     [CUBE_FACES.TECHNOLOGIES]:{upper:1318, lower:1319}
 };
+Object.freeze(face_indexes);
 
 //Initial camear angles
 export const INITIAL_CAMERA_ANGLES={
@@ -28,6 +30,7 @@ export const INITIAL_CAMERA_ANGLES={
     Y:0,
     Z:0
 };
+Object.freeze(INITIAL_CAMERA_ANGLES);
 
 //Areas of interest in cube faces
 export const face_areas={
@@ -164,3 +167,4 @@ export const face_areas={
         }
     }
 };
+Object.freeze(face_areas);

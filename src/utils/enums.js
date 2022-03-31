@@ -1,4 +1,4 @@
-export const ANIMATION_DIRECTIONS={
+export const  ANIMATION_DIRECTIONS={
     UP: "Up",
     DOWN: "Down",
     LEFT: "Left",
@@ -6,6 +6,7 @@ export const ANIMATION_DIRECTIONS={
     STANDBY: "StandBy",
     START: "Start"
 };
+Object.freeze(ANIMATION_DIRECTIONS);
 
 export const CUBE_FACES={
     INFO:"Info",
@@ -15,18 +16,20 @@ export const CUBE_FACES={
     EXPERIENCE:"Experience",
     INTERESTS:"Interests"
 };
+Object.freeze(CUBE_FACES);
 
 export const ROTATION_ORDERS={
     X:"XYZ",
     Y:"YXZ",
     Z:"ZXY"
 };
+Object.freeze(ROTATION_ORDERS);
 
 export const OPERATORS={
     PLUS_EQ:"+=",
     MINUS_EQ:"-="
 };
-
+Object.freeze(OPERATORS);
 
 export const CUBE_AREAS={
     NONE:"none",
@@ -61,9 +64,11 @@ export const CUBE_AREAS={
     CSHARP:"csharp",
     SQL:"sql"
 };
+Object.freeze(CUBE_AREAS);
 
 export const SOUNDS={
     NEXT:"next",
     PREV:"prev",
     EXPAND:"expand"
 };
+Object.freeze(SOUNDS);
