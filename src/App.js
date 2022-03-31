@@ -10,6 +10,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import {withStyles} from "@material-ui/core/styles";
 import {ExtraInfoHTML} from "./components/ExtraInfo";
 import { playAudio } from './utils/utils';
+
+/* ------------------------------------------------------------------------------------------ */
 //Styled components wrapper
 const Wrapper=styled.div`
   canvas{
@@ -23,7 +25,8 @@ const Wrapper=styled.div`
     }
   }
   `;
-
+/* ------------------------------------------------------------------------------------------ */
+//Cuestomize tooltip
 const ExtraInfoTooltip = withStyles(theme => ({
    tooltip: {
     overflow:"hidden",
@@ -43,7 +46,7 @@ const ExtraInfoTooltip = withStyles(theme => ({
 
   } 
 }))(Tooltip);
-
+/* ------------------------------------------------------------------------------------------ */
 function App() {
   const [animation, setAnimation] =useState(ANIMATION_DIRECTIONS.STANDBY);
   const [isBtnDisabled,setIsBtnDisabled]=useState(true);
@@ -54,28 +57,28 @@ function App() {
   const orbitControls= useRef();
   const initialPolarAngle= INITIAL_CAMERA_ANGLES.POLAR;
   const initialAzimuthalAngle= INITIAL_CAMERA_ANGLES.AZIMUTHAL;
-
+  /* ------------------------------------------------------------------------------------------ */
   return (
     <Wrapper className="App">
       <div className="contentContainer">
         <div className="buttonsContainer" onMouseEnter={()=>{setIsTooltipOpen(false);}}>
           <div className="facesTextContainer">
-            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INFO); setIsBtnDisabled(true); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}>
+            <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INFO); setIsBtnDisabled(true);}} disabled={isBtnDisabled}>
               {CUBE_FACES.INFO}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EDUCATION); setIsBtnDisabled(true); playAudio(SOUNDS.NEXT);}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EDUCATION); setIsBtnDisabled(true);}} disabled={isBtnDisabled}>
               {CUBE_FACES.EDUCATION}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.SKILLS); setIsBtnDisabled(true); playAudio(SOUNDS.NEXT);}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.SKILLS); setIsBtnDisabled(true);}} disabled={isBtnDisabled}>
               {CUBE_FACES.SKILLS}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.TECHNOLOGIES); setIsBtnDisabled(true); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.TECHNOLOGIES); setIsBtnDisabled(true);}} disabled={isBtnDisabled}>
               {CUBE_FACES.TECHNOLOGIES}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EXPERIENCE); setIsBtnDisabled(true); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.EXPERIENCE); setIsBtnDisabled(true);}} disabled={isBtnDisabled}>
               {CUBE_FACES.EXPERIENCE}
               </button>
-              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INTERESTS); setIsBtnDisabled(true);playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}>
+              <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INTERESTS); setIsBtnDisabled(true);}} disabled={isBtnDisabled}>
               {CUBE_FACES.INTERESTS}
             </button>   
           </div>
@@ -149,7 +152,6 @@ function App() {
                   setAnimation(ANIMATION_DIRECTIONS.STANDBY);
                   setIsBtnDisabled(false);
                 }}
-
                 //Change contents of tooltip
                 onExtraInfoChange={(newInfo)=>{
                   if(newInfo !== extraInfo){
@@ -157,7 +159,6 @@ function App() {
                     setExtraInfo(newInfo);
                   }   
                 }}
-
                 //Change if tooltip is shown
                 onInAreaChange={(inArea)=>{
                   if(inArea !== isTooltipOpen){
@@ -198,8 +199,6 @@ function App() {
     </Wrapper> 
   );
 };
-
-
 
 export default App;
 
