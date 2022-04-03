@@ -4,17 +4,22 @@ import gsap from "gsap";
 import { ANIMATION_DIRECTIONS, CUBE_FACES, ROTATION_ORDERS, OPERATORS, SOUNDS } from "../utils/enums";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
-import {positions} from "../utils/facesPositions";
+import {positions} from "../utils/facesPositions"; 
 import {isInsideArea, usePrevious, getFace, playAudio} from "../utils/utils";
 
 const gltfName="/cubeTransparent_d.gltf" ;
 useGLTF.preload(gltfName);
+let currentTextureArea="";
+let newEmissiveMap=new THREE.Texture();
+const imageElement = new Image();
 
 /* ------------------------------------------------------------------------------------------ */
 export  function CubeTransparent(props) {
   //Declaring refs for group and mesh
   const myCubeGroup = useRef();
   const myCubeMesh = useRef();
+  const myMaterial = useRef();
+  const isAnimating=useRef(false);
   const prevAnimation= usePrevious(props.animation);
   //Get nodes,materials and scene from model
   const { nodes, materials, scene } = useGLTF(gltfName);
@@ -30,23 +35,52 @@ export  function CubeTransparent(props) {
   const aspectRatio=1.35;
   const fov = 75;
   //Add rezise event listener to window
-  window.addEventListener('resize', handleResize);
+  window.addEventListener("resize", handleResize);
   /* ------------------------------------------------------------------------------------------ */
   //Hande mouseMove for extra features
   function handleMouseMove(e){
-    //Get raycaster intersection with cube
-    const intersects= raycaster.intersectObject(myCubeMesh.current,false);
-    //Get face of intersection and evaluate if point inside notable area
-    let resultObject= isInsideArea(getFace(intersects[0].faceIndex), intersects[0].point.x, intersects[0].point.y);    if(resultObject !== null){
-      if(resultObject.inArea){
-        //Change state for extra info
-        props.onExtraInfoChange(resultObject.area);
-        props.onInAreaChange(true);
-      } else {
-        props.onInAreaChange(false);
+    //Only process mouse movement if cube not in animations
+    if(props.animation === ANIMATION_DIRECTIONS.STANDBY && !isAnimating.current){
+      console.log("render");
+      //Wait for image to load to change texture
+      imageElement.onload = function () {
+        newEmissiveMap.image= imageElement;        
+        myMaterial.current.emissiveMap.copy(newEmissiveMap);
+      };
+      //Get raycaster intersection with cube
+      const intersects= raycaster.intersectObject(myCubeMesh.current,false);
+      //Get face of intersection and evaluate if point inside notable area
+      const face_=getFace(intersects[0].faceIndex);
+      let resultObject= isInsideArea(face_, intersects[0].point.x, intersects[0].point.y);    
+      if(resultObject !== null){
+        if(resultObject.inArea){
+          //Change texture to highlight area
+          if(resultObject.area !== currentTextureArea){
+            imageElement.src="./textures/texture_sel2_" + resultObject.area + ".jpg";
+            document.getElementById("canvasDiv").style.cursor = "pointer";
+            currentTextureArea=resultObject.area; 
+          }
+        } else {
+          if(currentTextureArea !== ""){
+            //Return to original texture
+            imageElement.src="./textures/texture_opt.jpg";
+            document.getElementById("canvasDiv").style.cursor = "default";
+            currentTextureArea="";
+            props.onInAreaChange(false);
+          }   
+        }
       }
     }
   };
+  /* ------------------------------------------------------------------------------------------ */
+  //Mesh click handler
+  function onClickMesh(e){
+    if(currentTextureArea !== ""){
+      props.onXYChange([e.clientX,e.clientY]); 
+      props.onExtraInfoChange(currentTextureArea);
+      props.onInAreaChange(true);
+    }
+  }; 
   /* ------------------------------------------------------------------------------------------ */
   //Resize handler
   function handleResize(){
@@ -78,6 +112,9 @@ export  function CubeTransparent(props) {
   //Adjust size at start
   useEffect(() => {
     handleResize();
+    //Asign material
+    myMaterial.current.copy(materials.transparent);
+    newEmissiveMap.copy(materials.transparent.emissiveMap);
     //Animate object to appear from  top
     if (myCubeGroup.current.position.y !== 0){
       gsap.to(myCubeGroup.current.position,{
@@ -125,14 +162,17 @@ export  function CubeTransparent(props) {
     function showFace(face){
       wantedQaternion.setFromEuler(new THREE.Euler( positions[face].x, positions[face].y, positions[face].z, 'XYZ' ));
       let isEqualQuaternion=wantedQaternion.equals(myCubeGroup.current.quaternion);
+      let duration_=isEqualQuaternion ? 0.001 : 1;
         gsap.to({}, {
-            duration: isEqualQuaternion ? 0.001 : 1,
+            duration: duration_,
             onUpdate: function() {
               myCubeGroup.current.quaternion.slerp(wantedQaternion, this.progress());
             },
-            onComplete:props.onAnimationDone
+            onComplete:props.onAnimationDone 
         });
-
+        setTimeout(function() {
+          isAnimating.current=false;
+        }, duration_*1000);          
     };
     /* ------------------------------------------------------------------------------------------ */
     //Correct position of face if needed
@@ -154,6 +194,7 @@ export  function CubeTransparent(props) {
     if(props.animation === prevAnimation) {
       return;
     }
+    isAnimating.current= true;
     switch (props.animation) {
       //Starging
       case ANIMATION_DIRECTIONS.START:
@@ -223,7 +264,9 @@ export  function CubeTransparent(props) {
   /* ------------------------------------------------------------------------------------------ */
   return (
     <group ref={myCubeGroup} scale={[1.9,1.9,1.9]} position={[0,7,0]} dispose={null} >
-      <mesh ref={myCubeMesh} geometry={nodes.Cube.geometry} material={materials.transparent} onPointerMove={(e)=>{handleMouseMove(e)}}/>
+      <mesh ref={myCubeMesh} geometry={nodes.Cube.geometry} onPointerMove={handleMouseMove} onClick={onClickMesh}>
+        <meshStandardMaterial ref={myMaterial} />
+      </mesh>
     </group>
   )
 };
