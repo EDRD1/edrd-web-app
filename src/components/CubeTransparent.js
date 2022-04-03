@@ -41,7 +41,6 @@ export  function CubeTransparent(props) {
   function handleMouseMove(e){
     //Only process mouse movement if cube not in animations
     if(props.animation === ANIMATION_DIRECTIONS.STANDBY && !isAnimating.current){
-      console.log("render");
       //Wait for image to load to change texture
       imageElement.onload = function () {
         newEmissiveMap.image= imageElement;        
@@ -204,6 +203,8 @@ export  function CubeTransparent(props) {
         //Camera raycaster intersect to check current face
         if([ANIMATION_DIRECTIONS.UP, ANIMATION_DIRECTIONS.DOWN, ANIMATION_DIRECTIONS.LEFT, ANIMATION_DIRECTIONS.RIGHT].includes(prevAnimation)){
           detectFaceAndCorrect();
+        } else {
+          isAnimating.current=false;
         }
         break;
       //Animate cube to show next face on top
