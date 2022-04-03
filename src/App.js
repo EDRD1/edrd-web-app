@@ -55,13 +55,14 @@ function App() {
   const [isTooltipOpen, setIsTooltipOpen]=useState(false);
   const [mousePosition, setMousePosition] = useState({ x: undefined, y: undefined });
   const orbitControls= useRef();
+  const myCanvasDiv= useRef();
   const initialPolarAngle= INITIAL_CAMERA_ANGLES.POLAR;
   const initialAzimuthalAngle= INITIAL_CAMERA_ANGLES.AZIMUTHAL;
   /* ------------------------------------------------------------------------------------------ */
   return (
     <Wrapper className="App">
       <div className="contentContainer">
-        <div className="buttonsContainer" onMouseEnter={()=>{setIsTooltipOpen(false);}}>
+        <div className="buttonsContainer" onMouseEnter={()=>{setIsTooltipOpen(false); myCanvasDiv.current.style.cursor = "default";}}>
           <div className="facesTextContainer">
             <button  className="btnDirection" onClick={()=>{setAnimation(CUBE_FACES.INFO); setIsBtnDisabled(true);}} disabled={isBtnDisabled}>
               {CUBE_FACES.INFO}
@@ -92,15 +93,17 @@ function App() {
             }
             //Make tooltip shown at cursor coordinates
             onMouseMove={e =>{
-              let diff=0;
-              if(e.pageX + 325 >  window.innerWidth){
-                diff = (e.pageX + (325)) - window.innerWidth;
-                setMousePosition({ x: e.pageX - (diff+10), y: e.pageY })
-              }else{
-                  setMousePosition({ x: e.pageX, y: e.pageY });
-                }
-              } 
-            } 
+              if(isTooltipOpen){
+                let diff=0;
+                if(e.pageX + 325 >  window.innerWidth){
+                  diff = (e.pageX + (325)) - window.innerWidth;
+                  setMousePosition({ x: e.pageX - (diff+10), y: e.pageY })
+                }else{
+                    setMousePosition({ x: e.pageX, y: e.pageY });
+                  }
+                } 
+              }
+            }
             PopperProps={{
               anchorEl: {
                 clientHeight: 0,
@@ -116,13 +119,14 @@ function App() {
               }
             }}
           >
-          <div className="canvasContainer">
+          <div className="canvasContainer" id="canvasDiv" ref={myCanvasDiv}>
             <Canvas className="canvas" >
               <Suspense fallback={null}>
                 <directionalLight position={[10,4,1]} intensity={0.07} color={0x66afd9}/>
                 <directionalLight position={[-10,-4,-1]} intensity={0.07} color={0x66afd9}/>
                 <OrbitControls ref={orbitControls} enableZoom={false}/>
-                <CubeTransparent 
+                <CubeTransparent
+                id="cubeElement" 
                 animation={animation}
                 //Event after loading page
                 afterStart={()=>{              
@@ -151,6 +155,12 @@ function App() {
                   //Reset animation state and buttons disabled state
                   setAnimation(ANIMATION_DIRECTIONS.STANDBY);
                   setIsBtnDisabled(false);
+                }}
+                 //Change x y for tooltip position
+                 onXYChange={(xYArray)=>{
+                  if(xYArray !== null){
+                    setMousePosition({ x: xYArray[0], y: xYArray[1] });
+                  } 
                 }}
                 //Change contents of tooltip
                 onExtraInfoChange={(newInfo)=>{
