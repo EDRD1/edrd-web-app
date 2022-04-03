@@ -72,9 +72,9 @@ export function isInsideArea(face, x ,y){
 
 /* ------------------------------------------------------------------------------------------ */
 //Sounds for cube movement
-let soundNext= new Audio("./sound1.ogg");
-let soundPrev= new Audio("./sound2.ogg");
-let soundExpand= new Audio("./sound3.ogg");
+let soundNext= new Audio("./sounds/sound1.ogg");
+let soundPrev= new Audio("./sounds/sound2.ogg");
+let soundExpand= new Audio("./sounds/sound3.ogg");
 
 export function playAudio( audio){
     soundNext.pause();

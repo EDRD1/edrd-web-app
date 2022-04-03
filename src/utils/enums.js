@@ -56,7 +56,7 @@ export const CUBE_AREAS={
     ENGLISH:"english",
     GRAPHIC_DESIGN:"graphic_design",
     ADAPTABILITY:"adaptability",
-    WORK_ETHIC:"wrok_ethic",
+    WORK_ETHIC:"work_ethic",
     JAVASCRIPT:"javascript",
     DELPHI:"delphi",
     JAVA:"java",
