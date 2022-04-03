@@ -1,9 +1,10 @@
-My portfolio website and side project (work in progress).
+__Portfolio website and side project__ (work in progress).
 
 Technologies used thus far:
-  * React.
-  * React Three Fiber.
-  * ThreeJs.
-  * GSAP.
-  * Blender.
-  * Photoshop.
+  * __React__: First time using and learning.
+  * __React Three Fiber__: First time using and learning.
+  * __ThreeJs__: First time using and learning.
+  * __GSAP__: First time using and learning.
+  * __Blender__: First time using and learning.
+  * __Photoshop__: Had some experience with.
+
