@@ -1,7 +1,7 @@
-import React, { useRef,useEffect,useMemo } from "react";
+import React, { useRef,useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import gsap from "gsap";
-import { ANIMATION_DIRECTIONS, CUBE_FACES, ROTATION_ORDERS, OPERATORS, SOUNDS } from "../utils/enums";
+import { ANIMATION_DIRECTIONS, CUBE_FACES, ROTATION_ORDERS, OPERATORS,FACE_ROTATION_SOUNDS } from "../utils/enums";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import {positions} from "../utils/facesPositions"; 
@@ -9,9 +9,6 @@ import {isInsideArea, usePrevious, getFace, playAudio} from "../utils/utils";
 
 const gltfName="/cubeTransparent_d.gltf" ;
 useGLTF.preload(gltfName);
-let currentTextureArea="";
-let newEmissiveMap=new THREE.Texture();
-const imageElement = new Image();
 
 /* ------------------------------------------------------------------------------------------ */
 export  function CubeTransparent(props) {
@@ -19,18 +16,25 @@ export  function CubeTransparent(props) {
   const myCubeGroup = useRef();
   const myCubeMesh = useRef();
   const myMaterial = useRef();
+  const currentFace= useRef(CUBE_FACES.INFO);
+  //New material for changing texture
+  const currentTextureArea=useRef("");
+  const newEmissiveMap=useRef(new THREE.Texture());
+  const imageElement =useRef(new Image());
+  //isAnimating flag
   const isAnimating=useRef(false);
+  //Get prev animation
   const prevAnimation= usePrevious(props.animation);
   //Get nodes,materials and scene from model
   const { nodes, materials, scene } = useGLTF(gltfName);
   scene.background= new THREE.Color(0x282c34);
   //Get camera object and intersetct from cursor
   const{camera,raycaster} =useThree();
-  //Camera raycaster
-  const raycasterCamera= useMemo(() => new THREE.Raycaster(),[]);
-  raycasterCamera.setFromCamera( new THREE.Vector2(), camera );
+  //Camera raycaster to detect face
+  const raycasterCamera=useRef(new THREE.Raycaster());
+  raycasterCamera.current.setFromCamera( new THREE.Vector2(), camera );
   //Correct rotation quaternion
-  const wantedQaternion= useMemo(() => new THREE.Quaternion(),[]);
+  const wantedQaternion= useRef(new THREE.Quaternion());
   //Initial camera settings
   const aspectRatio=1.35;
   const fov = 75;
@@ -42,9 +46,9 @@ export  function CubeTransparent(props) {
     //Only process mouse movement if cube not in animations
     if(props.animation === ANIMATION_DIRECTIONS.STANDBY && !isAnimating.current){
       //Wait for image to load to change texture
-      imageElement.onload = function () {
-        newEmissiveMap.image= imageElement;        
-        myMaterial.current.emissiveMap.copy(newEmissiveMap);
+      imageElement.current.onload = function () {
+        newEmissiveMap.current.image= imageElement.current;        
+        myMaterial.current.emissiveMap.copy(newEmissiveMap.current);
       };
       //Get raycaster intersection with cube
       const intersects= raycaster.intersectObject(myCubeMesh.current,false);
@@ -54,17 +58,17 @@ export  function CubeTransparent(props) {
       if(resultObject !== null){
         if(resultObject.inArea){
           //Change texture to highlight area
-          if(resultObject.area !== currentTextureArea){
-            imageElement.src="./textures/texture_sel2_" + resultObject.area + ".jpg";
+          if(resultObject.area !== currentTextureArea.current){
+            imageElement.current.src="./textures/texture_sel2_" + resultObject.area + ".jpg";
             document.getElementById("canvasDiv").style.cursor = "pointer";
-            currentTextureArea=resultObject.area; 
+            currentTextureArea.current=resultObject.area; 
           }
         } else {
-          if(currentTextureArea !== ""){
+          if(currentTextureArea.current !== ""){
             //Return to original texture
-            imageElement.src="./textures/texture_opt.jpg";
+            imageElement.current.src="./textures/texture_opt.jpg";
             document.getElementById("canvasDiv").style.cursor = "default";
-            currentTextureArea="";
+            currentTextureArea.current="";
             props.onInAreaChange(false);
           }   
         }
@@ -74,9 +78,9 @@ export  function CubeTransparent(props) {
   /* ------------------------------------------------------------------------------------------ */
   //Mesh click handler
   function onClickMesh(e){
-    if(currentTextureArea !== ""){
+    if(currentTextureArea.current !== ""){
       props.onXYChange([e.clientX,e.clientY]); 
-      props.onExtraInfoChange(currentTextureArea);
+      props.onExtraInfoChange(currentTextureArea.current);
       props.onInAreaChange(true);
     }
   }; 
@@ -108,12 +112,12 @@ export  function CubeTransparent(props) {
    camera.updateProjectionMatrix();
   };
   /* ------------------------------------------------------------------------------------------ */
-  //Adjust size at start
+  //Adjust size at start and animate cube entry
   useEffect(() => {
     handleResize();
     //Asign material
     myMaterial.current.copy(materials.transparent);
-    newEmissiveMap.copy(materials.transparent.emissiveMap);
+    newEmissiveMap.current.copy(materials.transparent.emissiveMap);
     //Animate object to appear from  top
     if (myCubeGroup.current.position.y !== 0){
       gsap.to(myCubeGroup.current.position,{
@@ -158,35 +162,42 @@ export  function CubeTransparent(props) {
     };
     /* ------------------------------------------------------------------------------------------ */
     //Compare and correct current rotation of cube to wanted rotation to show face
-    function showFace(face){
-      wantedQaternion.setFromEuler(new THREE.Euler( positions[face].x, positions[face].y, positions[face].z, 'XYZ' ));
-      let isEqualQuaternion=wantedQaternion.equals(myCubeGroup.current.quaternion);
+    function showFace(face,canPlayAudio_=false){
+      wantedQaternion.current.setFromEuler(new THREE.Euler( positions[face].x, positions[face].y, positions[face].z, 'XYZ' ));
+      if(canPlayAudio_){
+          //Play next or prev sound depending on current and next faces
+          playAudio(FACE_ROTATION_SOUNDS[currentFace.current][props.animation]);
+      }
+      let isEqualQuaternion=wantedQaternion.current.equals(myCubeGroup.current.quaternion);
+      console.log(isEqualQuaternion);
       let duration_=isEqualQuaternion ? 0.001 : 1;
         gsap.to({}, {
             duration: duration_,
             onUpdate: function() {
-              myCubeGroup.current.quaternion.slerp(wantedQaternion, this.progress());
+              myCubeGroup.current.quaternion.slerp(wantedQaternion.current, this.progress());
             },
             onComplete:props.onAnimationDone 
         });
         setTimeout(function() {
           isAnimating.current=false;
-        }, duration_*1000);          
+        }, duration_*1000);   
+      currentFace.current=face;       
     };
     /* ------------------------------------------------------------------------------------------ */
     //Correct position of face if needed
     function detectFaceAndCorrect(){
-      const intersectsCamera= raycasterCamera.intersectObject(myCubeMesh.current,false);
+      const intersectsCamera= raycasterCamera.current.intersectObject(myCubeMesh.current,false);
       showFace(getFace(intersectsCamera[0].faceIndex));     
     };
     /* ------------------------------------------------------------------------------------------ */
     //Compare if current face same as wanted face and show it
-    function compareFaceAndShow(sound){
-      const intersectsCamera= raycasterCamera.intersectObject(myCubeMesh.current,false);
+    function compareFaceAndShow(){
+      let canPlayAudio;
+      const intersectsCamera= raycasterCamera.current.intersectObject(myCubeMesh.current,false);
       if(getFace(intersectsCamera[0].faceIndex) !== props.animation){
-        playAudio(sound);
+        canPlayAudio= true;
       }
-      showFace(props.animation);
+      showFace(props.animation,canPlayAudio);
     };
     /* ------------------------------------------------------------------------------------------ */
     //Only enter when animation changes
@@ -233,34 +244,32 @@ export  function CubeTransparent(props) {
         break;
       //Show INFO face
       case CUBE_FACES.INFO:
-        compareFaceAndShow(SOUNDS.PREV);
+        compareFaceAndShow();
         break;
       //Show EDUCATION face
       case CUBE_FACES.EDUCATION:
-        compareFaceAndShow(SOUNDS.NEXT);
+        compareFaceAndShow();
         break;
       //Show SKILLS face
       case CUBE_FACES.SKILLS:
-        compareFaceAndShow(SOUNDS.NEXT);
+        compareFaceAndShow();
         break;
       //Show TECHNOLOGIES face
       case CUBE_FACES.TECHNOLOGIES:
-        compareFaceAndShow(SOUNDS.PREV);
+        compareFaceAndShow();
         break;
       //Show EXPERIENCE face
       case CUBE_FACES.EXPERIENCE:
-        compareFaceAndShow(SOUNDS.PREV);
+        compareFaceAndShow();
         break;
       //Show INTERESTS face
       case CUBE_FACES.INTERESTS:
-        compareFaceAndShow(SOUNDS.PREV);
+        compareFaceAndShow();
         break;
     default:
         break;
     }
-    
-
-  }, [props.animation,props.onAnimationDone,prevAnimation,raycasterCamera,wantedQaternion]);
+  }, [props.animation,props.onAnimationDone,prevAnimation]);
 
   /* ------------------------------------------------------------------------------------------ */
   return (
