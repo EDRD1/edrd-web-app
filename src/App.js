@@ -124,7 +124,7 @@ function App() {
               <Suspense fallback={null}>
                 <directionalLight position={[10,4,1]} intensity={0.07} color={0x66afd9}/>
                 <directionalLight position={[-10,-4,-1]} intensity={0.07} color={0x66afd9}/>
-                <OrbitControls ref={orbitControls} enableZoom={false}/>
+                <OrbitControls ref={orbitControls} enableZoom={false} enablePan={false}/>
                 <CubeTransparent
                 id="cubeElement" 
                 animation={animation}
