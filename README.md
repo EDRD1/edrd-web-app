@@ -23,7 +23,7 @@ __Interact with the cube:__
 ![interact_cube](https://user-images.githubusercontent.com/63168861/161643098-4166c30f-7f3a-419a-8d26-b6441ed71c90.gif)
 
 
-__Move/Rotate the cube:_
+__Move/Rotate the cube:__
 
 ![move_cube](https://user-images.githubusercontent.com/63168861/161643166-489cad3d-79d2-4610-b4d4-f5d6a6aa1b94.gif)
 
