@@ -124,7 +124,7 @@ export function ExtraInfoHTML(props) {
                         <Typewriter
                             onInit={(typewriter)=>{
                                 typewriter
-                                .typeString('Founded in 1943, catholic <a href="https://www.colegioportugal.edu.mx/" target="_blank" rel="noreferrer">institution</a> that offers pre, elementary, middle and highschool education.')
+                                .typeString('Founded in 1943, catholic <a href="https://www.colegioportugal.edu.mx/" target="_blank" rel="noreferrer">institution</a> that offers pre, elementary, middle and high school education.')
                                 .start()
                             }}
                         />
@@ -180,7 +180,7 @@ export function ExtraInfoHTML(props) {
                         <Typewriter
                             onInit={(typewriter)=>{
                                 typewriter
-                                .typeString('Favorite game of all time, "The legend of Zelda ocarina of time" for the nintendo 64. ')
+                                .typeString('Favorite game of all time, "The legend of Zelda ocarina of time" for the Nintendo 64. ')
                                 .start()
                             }}
                         />
@@ -198,7 +198,7 @@ export function ExtraInfoHTML(props) {
                         <Typewriter
                             onInit={(typewriter)=>{
                                 typewriter
-                                .typeString('Autonomous Mexican goverment <a href="https://en.wikipedia.org/wiki/National_Institute_of_Statistics_and_Geography" target="_blank" rel="noreferrer">agency</a> , provides the country with statistical, economical and geographical information of relevance.')
+                                .typeString('Autonomous Mexican goverment <a href="https://en.wikipedia.org/wiki/National_Institute_of_Statistics_and_Geography" target="_blank" rel="noreferrer">agency</a> , provides the country with statistical, economic and geographical information of relevance.')
                                 .start()
                             }}
                         />
@@ -212,7 +212,7 @@ export function ExtraInfoHTML(props) {
                         <Typewriter
                             onInit={(typewriter)=>{
                                 typewriter
-                                .typeString('Mainly mantaining and implementing new features to existing internal application for data collection on various census.')
+                                .typeString('Mainly maintaining and implementing new features to existing internal application for data collection on various censuses.')
                                 .start()
                             }}
                         />
@@ -316,7 +316,7 @@ export function ExtraInfoHTML(props) {
                         <Typewriter
                             onInit={(typewriter)=>{
                                 typewriter
-                                .typeString('Listening understanding: 100%, Writing: 80%, Speaking: 60%.')
+                                .typeString('Listening/Reading: 100%, Writing: 80%, Speaking: 60%.')
                                 .start()
                             }}
                         />
