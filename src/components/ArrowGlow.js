@@ -33,7 +33,8 @@ export function Arrow({ ...props }) {
         opacity:0.75, 
         duration: 2.5
       }); 
-    }, 2000);     
+    }, 2000); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
