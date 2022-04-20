@@ -1,5 +1,6 @@
 import './App.css';
 import {Canvas} from "@react-three/fiber";
+import { MathUtils } from 'three';
 import styled from 'styled-components';
 import { Suspense,useState,useRef} from 'react';
 import {CubeTransparent} from "./components/CubeTransparent";
@@ -9,6 +10,7 @@ import {OrbitControls} from '@react-three/drei';
 import Tooltip from "@material-ui/core/Tooltip";
 import {withStyles} from "@material-ui/core/styles";
 import {ExtraInfoHTML} from "./components/ExtraInfo";
+import {Arrow} from "./components/ArrowGlow";
 import { playAudio } from './utils/utils';
 
 /* ------------------------------------------------------------------------------------------ */
@@ -50,7 +52,6 @@ const ExtraInfoTooltip = withStyles(theme => ({
 function App() {
   const [animation, setAnimation] =useState(ANIMATION_DIRECTIONS.STANDBY);
   const [isBtnDisabled,setIsBtnDisabled]=useState(true);
-  const [arrowsStyle,setArrowsStyle]=useState("opacity0");
   const [extraInfo, setExtraInfo]= useState(CUBE_AREAS.NONE);
   const [isTooltipOpen, setIsTooltipOpen]=useState(false);
   const [mousePosition, setMousePosition] = useState({ x: undefined, y: undefined });
@@ -125,20 +126,18 @@ function App() {
                 <directionalLight position={[10,4,1]} intensity={0.07} color={0x66afd9}/>
                 <directionalLight position={[-10,-4,-1]} intensity={0.07} color={0x66afd9}/>
                 <OrbitControls ref={orbitControls} enableZoom={false} enablePan={false}/>
+                <Arrow yPosition={2.7} zRotation={MathUtils.degToRad(90)} onClick={(e)=>{if(!isBtnDisabled){setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.UP); playAudio(SOUNDS.NEXT);}}}/>
+                <Arrow yPosition={2.7} zRotation={MathUtils.degToRad(-90)} onClick={(e)=>{if(!isBtnDisabled){setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.DOWN); playAudio(SOUNDS.PREV);}}}/>
+                <Arrow yPosition={2.7} zRotation={MathUtils.degToRad(180)} onClick={(e)=>{if(!isBtnDisabled){setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.LEFT); playAudio(SOUNDS.PREV);}}}/>
+                <Arrow yPosition={2.7} zRotation={0} onClick={(e)=>{if(!isBtnDisabled){setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.RIGHT); playAudio(SOUNDS.NEXT);}}}/>
                 <CubeTransparent
                 id="cubeElement" 
                 animation={animation}
                 //Event after loading page
                 afterStart={()=>{              
                   setTimeout(function() {
-                    //Make arrows visible
-                    setArrowsStyle("arrowImage");
                     //Enable buttons
                     setIsBtnDisabled(false);
-                    setTimeout(function() {
-                      //Disable opacity transition
-                      setArrowsStyle("arrowImage noTransition");
-                    }, 1200);  
                   }, 2000);       
                 }}
                 onAnimationDone={()=>{
@@ -184,18 +183,6 @@ function App() {
                 />
               </Suspense>
             </Canvas>  
-            <div className="upDiv noOutline" >
-              <img className={arrowsStyle} src="./arrow.png" alt="Up arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.UP); playAudio(SOUNDS.NEXT);}} disabled={isBtnDisabled} />
-            </div>
-            <div className="downDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Down arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.DOWN); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}/>
-            </div> 
-            <div className="leftDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Left arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.LEFT); playAudio(SOUNDS.PREV);}} disabled={isBtnDisabled}/>
-            </div> 
-            <div className="rightDiv noOutline">
-              <img className={arrowsStyle}  src="./arrow.png" alt="Right arrow" onClick={()=>{setIsBtnDisabled(true); setAnimation(ANIMATION_DIRECTIONS.RIGHT); playAudio(SOUNDS.NEXT);}} disabled={isBtnDisabled}/>
-            </div> 
           </div>
         </ExtraInfoTooltip>
       </div>
