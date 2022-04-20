@@ -169,7 +169,6 @@ export  function CubeTransparent(props) {
           playAudio(FACE_ROTATION_SOUNDS[currentFace.current][props.animation]);
       }
       let isEqualQuaternion=wantedQaternion.current.equals(myCubeGroup.current.quaternion);
-      console.log(isEqualQuaternion);
       let duration_=isEqualQuaternion ? 0.001 : 1;
         gsap.to({}, {
             duration: duration_,
