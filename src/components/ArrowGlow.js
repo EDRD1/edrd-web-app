@@ -30,7 +30,7 @@ export function Arrow({ ...props }) {
     setTimeout(function() {
       //Make arrows visible
       gsap.to(myMaterial.current,{
-        opacity:1, 
+        opacity:0.75, 
         duration: 2.5
       }); 
     }, 2000);     
