@@ -87,6 +87,7 @@ export  function CubeTransparent(props) {
   /* ------------------------------------------------------------------------------------------ */
   //Resize handler
   function handleResize(){
+    gl.setPixelRatio(window.devicePixelRatio);
     let wFactor = 0.7;
     let hFactor = 1;
     let fov_=fov;
@@ -128,7 +129,6 @@ export  function CubeTransparent(props) {
       }); 
     }
     props.afterStart();
-    gl.setPixelRatio(window.devicePixelRatio);
     // eslint-disable-next-line react-hooks/exhaustive-deps  
   },[]);
   /* ------------------------------------------------------------------------------------------ */
