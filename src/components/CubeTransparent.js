@@ -29,7 +29,7 @@ export  function CubeTransparent(props) {
   const { nodes, materials, scene } = useGLTF(gltfName);
   scene.background= new THREE.Color(0x282c34);
   //Get camera object and intersetct from cursor
-  const{camera,raycaster} =useThree();
+  const{camera,raycaster,gl} =useThree();
   //Camera raycaster to detect face
   const raycasterCamera=useRef(new THREE.Raycaster());
   raycasterCamera.current.setFromCamera( new THREE.Vector2(), camera );
@@ -128,6 +128,7 @@ export  function CubeTransparent(props) {
       }); 
     }
     props.afterStart();
+    gl.setPixelRatio(window.devicePixelRatio);
     // eslint-disable-next-line react-hooks/exhaustive-deps  
   },[]);
   /* ------------------------------------------------------------------------------------------ */
